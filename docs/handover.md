@@ -3,26 +3,27 @@
 **Project:** LumaLoad — Recovery Load OS  
 **Author:** Atchayam G  
 **Autonomous Engineer:** Antigravity / Gemini  
-**Current Milestone:** CP3 (Complete) -> CP4 (Active)  
-**Time:** 2026-09-04 16:27 IST  
+**Current Milestone:** CP4 (Complete) -> CP5 (Active)  
+**Time:** 2026-09-04 17:36 IST  
 
 ---
 
 ## 1. Executive Summary
 
-Checkpoint 3 (CP3) has reached completion with the delivery of the complete Glass Box Analysis Pipeline and API surface:
-- Seven-stage analysis pipeline (`/api/analyze-day`) with real millisecond execution traces:
-  1. `sanitize`: deterministic PII stripper.
-  2. `safety_check`: deterministic CDC danger signs hard-stop.
-  3. `structure_activities`: parallel activity load vector classification (Gemini 3.8 Flash + deterministic fallback).
-  4. `retrieve_evidence`: multi-dimensional evidence chunk retrieval (top 8).
-  5. `compose_plan`: Gemini 3.8 Flash recommendation composer (<=5 recommendations, citation required).
-  6. `verify_plan`: seven-gate verifier deleting non-cited, hallucinated, banned, or overreaching recommendations.
-  7. `build_trace`: Glass Box audit trace assembly.
-- AI Provider abstraction (`GeminiProvider` and `DeterministicProvider`).
-- App Router API routes: `/api/analyze-day` (`maxDuration = 60`), `/api/health`, `/api/evidence/[id]`.
-- All 6 tests specified in Section 13 green (37/37 total tests pass).
-- Ready for public GitHub publish and Vercel deployment.
+Checkpoints CP3.5 and CP4 have reached full completion:
+- **CP3.5 Correction Order:**
+  - Resolved all four blocking production defects.
+  - Implemented `/api/diag` with live model inspection.
+  - Hardened pipeline cascade with 5s timeouts per attempt; parallelized `structure_activities` and `compose_plan` with `Promise.all` and batch verification in `verifyPlan`, clocking **3.2s total execution time** (well under the 20s budget).
+  - Fixed mobile horizontal overflow across 390, 768, 1024, and 1440 viewports; enforced 44px minimum touch targets.
+  - Completely redesigned the Load Ribbon with 3 unstacked organic cubic Catmull-Rom splines, 8px minimum physical strand thickness, and shaded Capacity Floor with hatched breakthrough bands.
+  - Created root `README.md` with full architecture, safety model, and evidence citations.
+- **CP4 The Five Screens:**
+  - Screen S1 (`/`): Story hero with animated Load Ribbon, thesis copy, Low Stimulus mode toggle.
+  - Screen S2 (`/check-in`): Safety gate, CDC danger-signs checklist (with immediate emergency stop halt), 8 symptom sliders (0-10), recovery context form, clinical override banner.
+  - Screen S3 (`/canvas`): Interactive Recovery Load Canvas, editable 24-hour day timeline, locked clinician boundaries for contact sport/driving, demo profile picker, Analyze My Day trigger.
+  - Screen S4 (`/plan`): Luma Plan with grounded recommendation cards, Why? drawer with external evidence links, Before & After load comparison, clinician boundaries, distress signposting.
+  - Screen S5 (`/trace`): The Glass Box with 7-stage real millisecond execution trace, model disclosure, active verifier claim purges, sanitized PII viewer, static evidence registry browser.
 
 ---
 

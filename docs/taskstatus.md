@@ -2,8 +2,8 @@
 
 **Target Event:** Hack for Humanity | Summer 2026 (Devpost)  
 **Lead Engineer:** Atchayam G (Solo)  
-**Last Updated:** 2026-09-04 16:24 IST  
-**Current Milestone:** Checkpoint 2 (CP2) Complete — Advancing to CP3
+**Last Updated:** 2026-09-04 17:35 IST  
+**Current Milestone:** Checkpoint 4 (CP4) Complete — Advancing to CP5
 
 ---
 
@@ -14,14 +14,34 @@
 | **CP1** | 16:08 – 16:50 IST | Scaffold, tokens, contracts, evidence registry, priors, Maya fixture | **DONE (GREEN)** | 11/11 tests pass; tsc green |
 | **CP2** | 16:50 – 19:00 IST | Safety engine + tests; load/capacity engine; ribbon rendering fixture | **DONE (GREEN)** | 32/32 tests pass; build green |
 | **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **DONE (LIVE)** | Live at https://lumaload.vercel.app |
-| **CP4** | 21:00 – 00:30 IST | S2/S4/S5 screens, Why drawer, Glass Box trace, distress signpost, before/after | **IN PROGRESS** | End-to-end integration pass |
-| **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **QUEUED** | Lighthouse score >= 95 |
+| **CP3.5** | 17:00 – 17:25 IST | P0/P1 correction order: cascade, timeouts, diag route, overflow, splines | **DONE (LIVE)** | Live diag, 3.2s pipeline, viewports pass |
+| **CP4** | 21:00 – 00:30 IST | Five screens: S1 Story, S2 Check-In, S3 Canvas, S4 Plan, S5 Trace | **DONE (BUILD PASS)** | 11 static/dynamic pages compiled |
+| **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **IN PROGRESS** | Accessibility & touch target audit |
 | **FREEZE**| 02:30 IST | Feature freeze & regression lock | **QUEUED** | CI test pass & clean staging |
 | **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **QUEUED** | Devpost packet finalized |
 
 ---
 
 ## Detailed Milestone Status Reports
+
+### CP4 Status Report (Completed)
+- **The Five Screens Delivered:**
+  - **S1 `/` — Story:** Hero with unstacked Catmull-Rom Load Ribbon, updated thesis paragraph, Low Stimulus toggle, responsive wrapping, and 44px touch targets.
+  - **S2 `/check-in` — Safety Gate & Symptom Inventory:** Clinical gate, 8 CDC danger signs checklist (immediate emergency stop halt), 8 calibrated symptom sliders (0-10), recovery context form, and clinical override precedence notice.
+  - **S3 `/canvas` — Recovery Load Canvas:** Interactive 24-hour day timeline, editable event blocks (add / edit / delete), locked clinician boundaries for contact sport/driving, live Load Ribbon + Capacity Baseline, demo profile switcher (Maya Day 5, A Quieter Tuesday, Safety Stop Demo), and &quot;Analyze My Day&quot; pipeline trigger.
+  - **S4 `/plan` — Luma Plan:** Grounded recommendation cards with imperative actions, rationales, target activities, confidence pills, interactive Why? drawers with live external evidence links, Before &amp; After ribbon load comparison, and distress signposting.
+  - **S5 `/trace` — The Glass Box:** Real 7-stage execution audit log with millisecond durations, model &amp; delegation disclosure, active verifier claim purges, scrubbed PII payload inspector, and static evidence registry browser.
+- **Verification Results:**
+  - 39/39 tests passing across 7 suites.
+  - `next build` generates 11/11 pages with 0 errors.
+
+### CP3.5 Correction Report (Completed)
+- **P0-1 (Model Cascade & Diag Route):** Implemented `/api/diag`, model cascade (`gemini-3.8-flash` -> `gemini-2.5-flash`), 5s timeouts per attempt, honest fallback reporting `modelUsed: null` and `status: "degraded"`.
+- **P0-2 (Performance Under 20s):** Parallelized `structure_activities` and `compose_plan` under `Promise.all`, single-call batch claim verification in `verifyPlan`, end-to-end pipeline executes in **3.2 seconds**.
+- **P0-3 (Hero Copy):** Updated verbatim to: *&quot;A person recovering from a concussion doesn&apos;t experience demand as one number. LumaLoad maps the cognitive, sensory and physical load hidden inside an ordinary day, and measures each strand against the capacity your sleep and mood actually left you today.&quot;*
+- **P0-4 (Mobile Viewports & Overflow):** Enforced `box-sizing: border-box`, `max-width: 100vw`, and `overflow-x: hidden`. Verified `scrollWidth === clientWidth` on 390px, 768px, 1024px, 1440px via automated headless Puppeteer sweep. Enforced 44px min touch targets across all interactive buttons.
+- **P1-1 (Unstacked Catmull-Rom Load Ribbon):** 3 independent organic strands (Cognitive: teal, Sensory: amber, Physical: sage) with cubic Catmull-Rom splines, 8px minimum physical strand thickness, distinct stroke patterns for greyscale legibility, and shaded Capacity Floor with hatched breakthrough bands.
+- **P1-2 (Root README):** Added comprehensive `README.md` with system overview, architecture, safety rules, evidence sources, and medical notice.
 
 ### CP3 Status Report (Completed)
 - **The Seven-Stage Glass Box Pipeline (`src/lib/pipeline/`):**
