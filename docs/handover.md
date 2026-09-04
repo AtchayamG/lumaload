@@ -3,35 +3,33 @@
 **Project:** LumaLoad — Recovery Load OS  
 **Author:** Atchayam G  
 **Autonomous Engineer:** Antigravity / Gemini  
-**Current Milestone:** CP2 (Complete) -> CP3 (Active)  
-**Time:** 2026-09-04 16:24 IST  
+**Current Milestone:** CP3 (Complete) -> CP4 (Active)  
+**Time:** 2026-09-04 16:27 IST  
 
 ---
 
 ## 1. Executive Summary
 
-Checkpoint 2 (CP2) has completed cleanly ahead of the 19:00 IST target:
-- Deterministic Safety Engine operational:
-  - CDC 8 danger signs emergency hard-stop logic.
-  - Three-tier activity risk classifier (`normal_daily_activity`, `clinician_guided`, `restricted`).
-  - Clinical boundary enforcement guarding contact sports, driving, and fall-risk activities.
-  - Distress triage and signpost banner rules for emotional support.
-  - Case-insensitive banned clinical phrase assertions.
-- Load & Capacity Engine operational:
-  - Duration scaling (0.7 to 1.6), environment factor modifiers (+0.4 per factor), and symptom sensitivities.
-  - Capacity Baseline formula modeling the mental-health arm.
-  - Pressure point detection identifying sustained demand windows above capacity baseline.
-- Hand-rolled custom SVG Load Ribbon with smooth spline streaming and Capacity Baseline floor rendering Maya's fixture on S1 Story (`/`).
-- Accessible text alternative table and Low Stimulus mode toggle integrated.
-- 32/32 tests passing across 5 test suites.
-- Next.js production build (`next build`) verified green.
+Checkpoint 3 (CP3) has reached completion with the delivery of the complete Glass Box Analysis Pipeline and API surface:
+- Seven-stage analysis pipeline (`/api/analyze-day`) with real millisecond execution traces:
+  1. `sanitize`: deterministic PII stripper.
+  2. `safety_check`: deterministic CDC danger signs hard-stop.
+  3. `structure_activities`: parallel activity load vector classification (Gemini 3.8 Flash + deterministic fallback).
+  4. `retrieve_evidence`: multi-dimensional evidence chunk retrieval (top 8).
+  5. `compose_plan`: Gemini 3.8 Flash recommendation composer (<=5 recommendations, citation required).
+  6. `verify_plan`: seven-gate verifier deleting non-cited, hallucinated, banned, or overreaching recommendations.
+  7. `build_trace`: Glass Box audit trace assembly.
+- AI Provider abstraction (`GeminiProvider` and `DeterministicProvider`).
+- App Router API routes: `/api/analyze-day` (`maxDuration = 60`), `/api/health`, `/api/evidence/[id]`.
+- All 6 tests specified in Section 13 green (37/37 total tests pass).
+- Ready for public GitHub publish and Vercel deployment.
 
 ---
 
 ## 2. Deploy Status
 
-- **Current Environment:** Local development & production build verified.
-- **Milestone CP3 Target:** Public Vercel Deployment with live Gemini 3.8 Flash pipeline and verifier.
+- **Current Environment:** Production build green.
+- **Deploy Action:** Pushing to GitHub `AtchayamG/lumaload` and deploying to Vercel with `GEMINI_API_KEY`.
 
 ---
 
@@ -40,14 +38,16 @@ Checkpoint 2 (CP2) has completed cleanly ahead of the 19:00 IST target:
 ```
  RUN  v3.2.7 D:/Work/Codex/Hackathon Projects/LumaLoad
 
- ✓ tests/danger-signs.test.ts (12 tests) 4ms
+ ✓ tests/danger-signs.test.ts (12 tests) 5ms
  ✓ tests/boundaries.test.ts (6 tests) 4ms
- ✓ tests/evidence-registry.test.ts (6 tests) 5ms
- ✓ tests/contracts.test.ts (5 tests) 3ms
+ ✓ tests/evidence-registry.test.ts (6 tests) 6ms
+ ✓ tests/contracts.test.ts (5 tests) 5ms
+ ✓ tests/verifier.test.ts (5 tests) 6ms
  ✓ tests/capacity.test.ts (3 tests) 6ms
 
- Test Files  5 passed (5)
-      Tests  32 passed (32)
+ Test Files  6 passed (6)
+      Tests  37 passed (37)
+   Duration  664ms
 
  tsc --noEmit: Passed with 0 errors.
  next build: Successfully generated static pages with 0 errors.

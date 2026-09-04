@@ -13,8 +13,8 @@
 |---|---|---|---|---|
 | **CP1** | 16:08 – 16:50 IST | Scaffold, tokens, contracts, evidence registry, priors, Maya fixture | **DONE (GREEN)** | 11/11 tests pass; tsc green |
 | **CP2** | 16:50 – 19:00 IST | Safety engine + tests; load/capacity engine; ribbon rendering fixture | **DONE (GREEN)** | 32/32 tests pass; build green |
-| **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **IN PROGRESS** | Public Vercel URL live |
-| **CP4** | 21:00 – 00:30 IST | S2/S4/S5 screens, Why drawer, Glass Box trace, distress signpost, before/after | **QUEUED** | End-to-end integration pass |
+| **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **DONE (GREEN)** | 37/37 tests pass; deploying to Vercel |
+| **CP4** | 21:00 – 00:30 IST | S2/S4/S5 screens, Why drawer, Glass Box trace, distress signpost, before/after | **IN PROGRESS** | End-to-end integration pass |
 | **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **QUEUED** | Lighthouse score >= 95 |
 | **FREEZE**| 02:30 IST | Feature freeze & regression lock | **QUEUED** | CI test pass & clean staging |
 | **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **QUEUED** | Devpost packet finalized |
@@ -22,6 +22,26 @@
 ---
 
 ## Detailed Milestone Status Reports
+
+### CP3 Status Report (Completed)
+- **The Seven-Stage Glass Box Pipeline (`src/lib/pipeline/`):**
+  1. `sanitize`: deterministic PII scrubbing (emails, phone numbers, external URLs, long digit sequences, names).
+  2. `safety_check`: deterministic 8 CDC danger signs evaluator; immediately halts downstream stages (`HALTED`) if triggered; evaluates restricted activities and mental health distress triage.
+  3. `structure_activities`: parallel activity load vector classification using Gemini 3.8 Flash structured output (with deterministic rules engine fallback).
+  4. `retrieve_evidence`: multi-dimensional relevance scorer retrieving top 8 evidence chunks from static verified registry based on symptom profile and activity demands.
+  5. `compose_plan`: Gemini 3.8 Flash synthesis of up to 5 recommendations with mandatory evidence citation IDs.
+  6. `verify_plan`: seven-gate verifier testing citations against registry, allowed-use intersection, banned phrase assertions, restricted activity boundaries, and model overreach checks.
+  7. `build_trace`: execution duration recording and payload assembly.
+- **AI Providers (`src/lib/ai/`):**
+  - `gemini.ts`: `@google/genai` integration with model `gemini-3.8-flash`, JSON schemas, 20s timeouts, and privacy logging.
+  - `deterministic.ts`: offline rules engine ensuring zero-dependency, reproducible recommendation synthesis.
+- **API Endpoints (`src/app/api/`):**
+  - `/api/analyze-day/route.ts`: App router POST endpoint with `export const maxDuration = 60;`.
+  - `/api/health/route.ts`: GET endpoint returning service health and model status.
+  - `/api/evidence/[id]/route.ts`: GET endpoint resolving individual verified registry chunks.
+- **Verification Results:**
+  - 37/37 tests passing across 6 suites (`tests/verifier.test.ts` added).
+  - All 6 tests specified in Section 13 green.
 
 ### CP2 Status Report (Completed)
 - **Deterministic Safety Engine (`src/lib/safety/`):**
