@@ -2,8 +2,8 @@
 
 **Target Event:** Hack for Humanity | Summer 2026 (Devpost)  
 **Lead Engineer:** Atchayam G (Solo)  
-**Last Updated:** 2026-09-04 17:35 IST  
-**Current Milestone:** Checkpoint 4 (CP4) Complete — Advancing to CP5
+**Last Updated:** 2026-09-04 18:05 IST  
+**Current Milestone:** Checkpoint 4.5 (CP4.5) Complete — Advancing to CP5
 
 ---
 
@@ -16,6 +16,7 @@
 | **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **DONE (LIVE)** | Live at https://lumaload.vercel.app |
 | **CP3.5** | 17:00 – 17:25 IST | P0/P1 correction order: cascade, timeouts, diag route, overflow, splines | **DONE (LIVE)** | Live diag, 3.2s pipeline, viewports pass |
 | **CP4** | 21:00 – 00:30 IST | Five screens: S1 Story, S2 Check-In, S3 Canvas, S4 Plan, S5 Trace | **DONE (BUILD PASS)** | 11 static/dynamic pages compiled |
+| **CP4.5** | 17:35 – 18:05 IST | Interactive canvas, precomputed demos, unstacked ribbon, cold visit states | **DONE (LIVE VERIFIED)** | 8/8 Live Puppeteer browser tests pass on Vercel |
 | **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **IN PROGRESS** | Accessibility & touch target audit |
 | **FREEZE**| 02:30 IST | Feature freeze & regression lock | **QUEUED** | CI test pass & clean staging |
 | **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **QUEUED** | Devpost packet finalized |
@@ -23,6 +24,36 @@
 ---
 
 ## Detailed Milestone Status Reports
+
+### CP4.5 Correction & Production Hardening Report (Completed & Live Verified)
+- **P0-0 (Interactive Canvas & EventEditor):**
+  - Built real `EventEditor.tsx` modal with accessible label input, category select (from `activity-priors.json`), time picker, duration slider/input, and 7 multi-select environment tags.
+  - Interactive "+ Add Activity", "Edit", and "Del" buttons integrated into `DayTimeline.tsx` and `EventBlock.tsx`.
+  - Added real-time activity search filter bar ensuring interactive form inputs are always present on `/canvas`.
+  - Locked restricted-category activities (`contact_sport`, `driving`) under clinical boundary protection.
+  - Verified live on Vercel deployment with headless Puppeteer: Add, Edit, and Delete persist to Zustand and update the DOM and ribbon live.
+- **P0-1 (Quota Conservation & Cascade Architecture):**
+  - Reduced model calls: `structure_activities` runs deterministic priors first (0 model calls for standard activities); `verify_plan` uses 1 batched verification call.
+  - Lite models added to fallback cascade: `gemini-3.8-flash` -> `gemini-3.5-flash` -> `gemini-2.5-flash` -> `gemini-3.5-flash-lite` -> `gemini-2.5-flash-lite`.
+  - Immediate failover on `RESOURCE_EXHAUSTED` / 429 quota errors without stalling (pipeline completes in ~6.1s on degraded live execution).
+  - Honest disclosure banner verbatim: *"Model quota exhausted on the free tier. This plan was produced by LumaLoad's deterministic rules engine. The evidence, safety gates and boundaries below are unaffected — they never depend on a model."*
+- **P0-2 (Precomputed Demo Days):**
+  - Generated precomputed responses using `scripts/precompute-demos.ts` for Maya Day 5, A Quieter Tuesday, and Safety Stop Demo.
+  - Saved to `src/data/precomputed/` and bundled statically in Next.js.
+  - Live `/api/analyze-day` serves exact demo matches from cache in **333ms** with prepended `served_from_precomputed` (2ms) trace stage.
+  - Added "Pre-computed with gemini-3.8-flash · 4 Sep 2026" badge and "Re-run live" trigger button on Plan and Glass Box screens.
+- **P0-3 (Unstacked 3-Strand Load Ribbon):**
+  - 3 independent fixed centrelines: Cognitive (`y=55`), Sensory (`y=110`), Physical (`y=165`).
+  - Symmetrical organic expansion about own centreline; guaranteed 6px minimum thickness so physical axis remains visible at low demand.
+  - Continuous 5-minute resampling with cubic Catmull-Rom splines eliminating flat plateaus.
+  - `mixBlendMode: "multiply"` with visible strand crossings.
+  - Shaded Capacity Floor rising from bottom with diagonal cross-hatch breakthrough pattern (`#pressure-hatch-pattern`).
+  - Greyscale legible with distinct stroke styles: dashed (`5 4`), dotted (`2 3`), and solid.
+- **P1 (Cold-visit States for `/plan` and `/trace`):**
+  - Full-featured empty states with contextual headers, feature summaries, and 1-click instant demo loaders ("Load Maya's Day 5 Plan" and "Inspect Maya's 7-Stage Audit Trace").
+  - Seamless fallback navigation to Recovery Canvas.
+- **Automated Live Verification on Vercel (`https://lumaload.vercel.app`):**
+  - 8/8 automated Puppeteer tests PASS: API Health, Precomputed cache (333ms), Canvas interactive inputs, Add Activity dialog/persistence, Delete Activity DOM removal, Plan cold visit & demo load, Trace cold visit & audit inspection, Unstacked 3-strand centrelines & blend modes.
 
 ### CP4 Status Report (Completed)
 - **The Five Screens Delivered:**

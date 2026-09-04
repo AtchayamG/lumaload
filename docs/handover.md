@@ -3,27 +3,21 @@
 **Project:** LumaLoad — Recovery Load OS  
 **Author:** Atchayam G  
 **Autonomous Engineer:** Antigravity / Gemini  
-**Current Milestone:** CP4 (Complete) -> CP5 (Active)  
-**Time:** 2026-09-04 17:36 IST  
+**Current Milestone:** CP4.5 (Complete & Live Verified) -> CP5 (Active)  
+**Time:** 2026-09-04 18:05 IST  
 
 ---
 
 ## 1. Executive Summary
 
-Checkpoints CP3.5 and CP4 have reached full completion:
-- **CP3.5 Correction Order:**
-  - Resolved all four blocking production defects.
-  - Implemented `/api/diag` with live model inspection.
-  - Hardened pipeline cascade with 5s timeouts per attempt; parallelized `structure_activities` and `compose_plan` with `Promise.all` and batch verification in `verifyPlan`, clocking **3.2s total execution time** (well under the 20s budget).
-  - Fixed mobile horizontal overflow across 390, 768, 1024, and 1440 viewports; enforced 44px minimum touch targets.
-  - Completely redesigned the Load Ribbon with 3 unstacked organic cubic Catmull-Rom splines, 8px minimum physical strand thickness, and shaded Capacity Floor with hatched breakthrough bands.
-  - Created root `README.md` with full architecture, safety model, and evidence citations.
-- **CP4 The Five Screens:**
-  - Screen S1 (`/`): Story hero with animated Load Ribbon, thesis copy, Low Stimulus mode toggle.
-  - Screen S2 (`/check-in`): Safety gate, CDC danger-signs checklist (with immediate emergency stop halt), 8 symptom sliders (0-10), recovery context form, clinical override banner.
-  - Screen S3 (`/canvas`): Interactive Recovery Load Canvas, editable 24-hour day timeline, locked clinician boundaries for contact sport/driving, demo profile picker, Analyze My Day trigger.
-  - Screen S4 (`/plan`): Luma Plan with grounded recommendation cards, Why? drawer with external evidence links, Before & After load comparison, clinician boundaries, distress signposting.
-  - Screen S5 (`/trace`): The Glass Box with 7-stage real millisecond execution trace, model disclosure, active verifier claim purges, sanitized PII viewer, static evidence registry browser.
+Checkpoints CP4 and CP4.5 have reached full completion and live verification on production:
+- **CP4.5 Correction Order (Live Verified):**
+  - **Interactive Canvas & EventEditor (P0-0):** Built real `EventEditor` modal with label, category dropdown, time, duration, and 7 multi-select environment tags. "+ Add Activity", "Edit", and "Del" buttons persist live to Zustand session and update ribbon and metrics. Verified live on Vercel deployment with headless Puppeteer.
+  - **Quota Preservation & Cascade (P0-1):** 0 model calls for standard demo days via deterministic priors; 1 batched call for plan composition/verification; lite models added to cascade (`gemini-3.8-flash` -> `gemini-3.5-flash` -> `gemini-2.5-flash` -> `gemini-3.5-flash-lite` -> `gemini-2.5-flash-lite`); immediate failover on 429 quota exhaustion in ~150ms without stalling; verbatim honest disclosure banner for quota exhausted state.
+  - **Precomputed Demo Days (P0-2):** Precomputed all 3 fixtures (Maya Day 5, A Quieter Tuesday, Danger Sign Demo) and bundled statically. Served instantly from `/api/analyze-day` in **333ms** with prepended `served_from_precomputed` (2ms) stage. Added honest precomputed badge and "Re-run live" trigger button.
+  - **Unstacked 3-Strand Load Ribbon (P0-3):** 3 independent fixed centrelines: Cognitive (`y=55`, dashed), Sensory (`y=110`, dotted), Physical (`y=165`, solid). Symmetrical expansion, 6px min thickness, Catmull-Rom splines with no flat plateaus, `mix-blend-mode: multiply`, and shaded Capacity Floor with hatched breakthrough pattern (`#pressure-hatch-pattern`).
+  - **Cold-Visit States (P1):** Rich empty states on `/plan` and `/trace` with 1-click demo loaders ("Load Maya's Day 5 Plan" and "Inspect Maya's 7-Stage Audit Trace") and links to Canvas.
+- **CP4 The Five Screens:** S1 Story, S2 Check-In, S3 Canvas, S4 Plan, S5 Trace. All 11 pages compiled and running live.
 
 ---
 
