@@ -26,6 +26,24 @@ A person recovering from a concussion doesn't experience demand as a single numb
 
 ---
 
+## Interface Tour & Screenshots
+
+| Screen S1 · Story (`/`) | Screen S3 · Recovery Canvas (`/canvas`) |
+|---|---|
+| ![Screen S1 Landing](docs/screenshots/01-landing.png) | ![Screen S3 Canvas](docs/screenshots/02-canvas-ribbon.png) |
+| *Neurological Load Cartography thesis & interactive hero ribbon.* | *24h timeline, interactive EventEditor & 3-strand Load Ribbon.* |
+
+| Screen S2 · Clinical Hard Stop (`/check-in`) | Screen S4 · The Luma Plan (`/plan`) |
+|---|---|
+| ![Screen S2 Emergency Halt](docs/screenshots/03-danger-sign-hard-stop.png) | ![Screen S4 Plan](docs/screenshots/04-plan-why-drawer.png) |
+| *Deterministic CDC danger-sign halt before any model runs.* | *Evidence-grounded accommodations with live "Why?" drawers.* |
+
+### Screen S5 · The Glass Box Audit (`/trace`)
+![Screen S5 Glass Box Trace](docs/screenshots/05-glass-box-trace.png)
+*Complete algorithmic audit: exact millisecond durations, PII scrubber, model disclosures, and active verifier claim purges.*
+
+---
+
 ## Architecture Diagram
 
 The 7-stage Glass Box execution pipeline decouples safety assertions and evidence verification from model inference:

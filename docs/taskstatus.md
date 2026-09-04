@@ -2,8 +2,8 @@
 
 **Target Event:** Hack for Humanity | Summer 2026 (Devpost)  
 **Lead Engineer:** Atchayam G (Solo)  
-**Last Updated:** 2026-09-04 18:32 IST  
-**Current Milestone:** Checkpoint 5 (CP5) Complete — Advancing to Feature Freeze & CP6
+**Last Updated:** 2026-09-04 18:38 IST  
+**Current Milestone:** Checkpoint 6 (CP6) Complete — All Submission Artifacts Ready & Locked
 
 ---
 
@@ -18,12 +18,28 @@
 | **CP4** | 21:00 – 00:30 IST | Five screens: S1 Story, S2 Check-In, S3 Canvas, S4 Plan, S5 Trace | **DONE (BUILD PASS)** | 11 static/dynamic pages compiled |
 | **CP4.5** | 17:35 – 18:05 IST | Interactive canvas, precomputed demos, unstacked ribbon, cold visit states | **DONE (LIVE VERIFIED)** | 8/8 Live Puppeteer browser tests pass on Vercel |
 | **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **DONE (100% AUDIT)** | Lighthouse: 100/100 on all 5 routes; 0 failing audits |
-| **FREEZE**| 02:30 IST | Feature freeze & regression lock | **ACTIVE** | All tests pass, build green, deployed live |
-| **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **IN PROGRESS** | Devpost packet & demo recording script |
+| **FREEZE**| 02:30 IST | Feature freeze & regression lock | **LOCKED (GREEN)** | Tag `feature-freeze`; 39/39 tests, build green, 8/8 live pass |
+| **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **DONE (ALL ASSETS)** | 5x 1600px screenshots, submission.md, demo-script.md ready |
 
 ---
 
 ## Detailed Milestone Status Reports
+
+### CP6 Submission Assets & Devpost Packet Report (Completed & Locked)
+- **1600px High-Resolution Submission Screenshots (`docs/screenshots/` & `public/screenshots/`):**
+  - `01-landing.png`: Screen S1 Story with brand typography and flowing 3-strand hero Load Ribbon.
+  - `02-canvas-ribbon.png`: Screen S3 Recovery Canvas with interactive 24h timeline, 3 unstacked strands (y=55, y=110, y=165), capacity floor, and locked football Clinician Boundary.
+  - `03-danger-sign-hard-stop.png`: Screen S2 Clinical Emergency Halt screen triggered immediately by CDC danger sign checklist before any model inference.
+  - `04-plan-why-drawer.png`: Screen S4 Luma Plan with expanded "Why?" evidence drawer citing verified CDC HEADS UP guideline with live link.
+  - `05-glass-box-trace.png`: Screen S5 The Glass Box execution trace showing 7-stage timing, model delegation, PII scrub inspection, and active verifier claim purges.
+- **Root README.md Interface Tour:**
+  - Integrated full 5-screen interface tour table with markdown image embeds into root `README.md`.
+- **Devpost Submission Document (`docs/submission.md`):**
+  - Pitch: 181 characters (strictly under 200 character requirement).
+  - Complete, factual writeup covering inspiration, feature walkthrough, technical architecture (pure CSS tokens, SVG splines, deterministic safety gates, 7-gate claim verifier, Gemini 3.8 Flash cascade), real engineering challenges, accomplishments, learnings, next steps, and live links.
+- **Video Recording Script (`docs/demo-script.md`):**
+  - Exact second-by-second (0:00 – 3:00) 3-minute video recording script.
+  - Complete shot list with screen coordinates, word-for-word voiceover, exact mouse clicks, and Plan B fallback timestamps.
 
 ### CP5 Accessibility & Low Stimulus Polish Report (Completed & 100% Audit Verified)
 - **Lighthouse Accessibility Audit Scores (Tested against live production URL https://lumaload.vercel.app):**
