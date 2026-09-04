@@ -38,12 +38,16 @@ export default function StoryPage() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: "var(--space-3)",
           marginBottom: "var(--space-8)",
           paddingBottom: "var(--space-4)",
           borderBottom: "1px solid var(--hairline)",
+          width: "100%",
+          boxSizing: "border-box",
         }}
       >
-        <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-3)" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-3)", flexWrap: "wrap" }}>
           <span
             style={{
               fontFamily: "var(--font-mono)",
@@ -68,19 +72,20 @@ export default function StoryPage() {
           </span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-4)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", flexWrap: "wrap" }}>
           <div
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              padding: "4px 10px",
+              padding: "6px 12px",
               borderRadius: "var(--radius-full)",
               backgroundColor: "var(--surface)",
               border: "1px solid var(--hairline)",
               fontSize: "0.75rem",
               fontFamily: "var(--font-mono)",
               color: "var(--muted)",
+              minHeight: "36px",
             }}
           >
             <span
@@ -89,6 +94,7 @@ export default function StoryPage() {
                 height: "6px",
                 borderRadius: "50%",
                 backgroundColor: "var(--success)",
+                flexShrink: 0,
               }}
             />
             No account · zero server storage
@@ -126,10 +132,10 @@ export default function StoryPage() {
             marginBottom: "var(--space-6)",
           }}
         >
-          Concussion recovery does not experience demand as one number. LumaLoad
-          maps the cognitive, sensory, and physical load hidden inside your day,
-          measuring each demand strand against your sleep and mood capacity
-          baseline.
+          A person recovering from a concussion doesn&apos;t experience demand as
+          one number. LumaLoad maps the cognitive, sensory and physical load
+          hidden inside an ordinary day, and measures each strand against the
+          capacity your sleep and mood actually left you today.
         </p>
 
         {/* Action CTAs */}
@@ -148,6 +154,8 @@ export default function StoryPage() {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
+              minHeight: "44px",
+              minWidth: "44px",
               padding: "12px 28px",
               backgroundColor: "var(--ink)",
               color: "var(--canvas)",
@@ -168,6 +176,8 @@ export default function StoryPage() {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
+              minHeight: "44px",
+              minWidth: "44px",
               padding: "11px 24px",
               backgroundColor: "var(--surface)",
               color: "var(--ink)",

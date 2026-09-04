@@ -31,8 +31,11 @@ export const LowStimulusToggle: React.FC<LowStimulusToggleProps> = ({
       style={{
         display: "inline-flex",
         alignItems: "center",
+        justifyContent: "center",
+        minHeight: "44px",
+        minWidth: "44px",
         gap: "var(--space-2)",
-        padding: "6px 12px",
+        padding: "8px 16px",
         borderRadius: "var(--radius-full)",
         border: "1px solid var(--hairline-strong)",
         backgroundColor: isLowStimulus ? "var(--ink)" : "var(--surface)",

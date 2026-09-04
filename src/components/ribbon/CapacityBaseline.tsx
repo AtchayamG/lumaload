@@ -20,16 +20,14 @@ export const CapacityBaseline: React.FC<CapacityBaselineProps> = ({
 }) => {
   const totalMinutes = timelineEnd - timelineStart;
 
-  // Calculate baseline Y coordinate
-  // Baseline range: 0.5 to 1.0 maps to Y between 170 and 90 in a 240px height canvas
-  const paddingBottom = 40;
-  const paddingTop = 40;
-  const usableHeight = height - paddingTop - paddingBottom;
-  const baselineY = height - paddingBottom - baseline * usableHeight;
+  // Baseline Y coordinate calculation
+  // Baseline range 0.5 to 1.0 maps to Y between 138 and 80 in a 280px canvas
+  const baselineY = 200 - baseline * 115;
+  const floorBottomY = height - 35;
 
   return (
     <g className="capacity-baseline-group">
-      {/* Pattern definitions for pressure points */}
+      {/* Pattern definitions for pressure points and capacity fill */}
       <defs>
         <pattern
           id="pressure-hatch-pattern"
@@ -45,12 +43,12 @@ export const CapacityBaseline: React.FC<CapacityBaselineProps> = ({
             y2="8"
             stroke="var(--danger)"
             strokeWidth="2"
-            opacity="0.25"
+            opacity="0.35"
           />
         </pattern>
-        <linearGradient id="capacity-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--axis-capacity)" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="var(--axis-capacity)" stopOpacity="0.04" />
+        <linearGradient id="capacity-floor-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--axis-capacity)" stopOpacity="0.14" />
+          <stop offset="100%" stopColor="var(--axis-capacity)" stopOpacity="0.03" />
         </linearGradient>
       </defs>
 
@@ -59,11 +57,11 @@ export const CapacityBaseline: React.FC<CapacityBaselineProps> = ({
         x="0"
         y={baselineY}
         width={width}
-        height={height - baselineY - 25}
-        fill="url(#capacity-gradient)"
+        height={Math.max(0, floorBottomY - baselineY)}
+        fill="url(#capacity-floor-gradient)"
       />
 
-      {/* Capacity Baseline Line */}
+      {/* Capacity Baseline Line — The capacity threshold */}
       <line
         x1="0"
         y1={baselineY}
@@ -71,24 +69,38 @@ export const CapacityBaseline: React.FC<CapacityBaselineProps> = ({
         y2={baselineY}
         stroke="var(--axis-capacity)"
         strokeWidth="1.5"
-        strokeDasharray="4 4"
-        opacity="0.8"
+        strokeDasharray="6 4"
+        opacity="0.9"
       />
 
-      {/* Capacity Baseline Label */}
-      <text
-        x={width - 8}
-        y={baselineY - 6}
-        textAnchor="end"
-        fontFamily="var(--font-mono)"
-        fontSize="10px"
-        fill="var(--axis-capacity)"
-        fontWeight="600"
-      >
-        CAPACITY BASELINE ({Math.round(baseline * 100)}%)
-      </text>
+      {/* Capacity Baseline Pill Label */}
+      <g transform={`translate(${width - 170}, ${baselineY - 18})`}>
+        <rect
+          x="0"
+          y="0"
+          width="164"
+          height="16"
+          rx="3"
+          fill="var(--surface)"
+          stroke="var(--axis-capacity)"
+          strokeWidth="1"
+          opacity="0.95"
+        />
+        <text
+          x="82"
+          y="11"
+          textAnchor="middle"
+          fontFamily="var(--font-mono)"
+          fontSize="9px"
+          fill="var(--axis-capacity)"
+          fontWeight="700"
+          letterSpacing="0.04em"
+        >
+          CAPACITY BASELINE ({Math.round(baseline * 100)}%)
+        </text>
+      </g>
 
-      {/* Pressure Points */}
+      {/* Pressure Points — Rendered as breakthrough zones extending through baseline */}
       {pressurePoints.map((pp, idx) => {
         const x1 = Math.max(
           0,
@@ -98,48 +110,51 @@ export const CapacityBaseline: React.FC<CapacityBaselineProps> = ({
           width,
           ((pp.endMinutes - timelineStart) / totalMinutes) * width
         );
-        const rectWidth = Math.max(12, x2 - x1);
-
+        const rectWidth = Math.max(16, x2 - x1);
         const isHigh = pp.severity === "high";
 
         return (
           <g key={idx} className="pressure-point-highlight">
-            {/* Cross-hatched pressure band */}
+            {/* Cross-hatched breakthrough zone punching above baseline */}
             <rect
               x={x1}
-              y={20}
+              y={25}
               width={rectWidth}
-              height={height - 45}
+              height={floorBottomY - 25}
               fill="url(#pressure-hatch-pattern)"
               stroke={isHigh ? "var(--danger)" : "var(--warning)"}
-              strokeWidth="1"
-              strokeDasharray="2 2"
-              opacity="0.7"
+              strokeWidth="1.5"
+              strokeDasharray="3 3"
+              opacity="0.75"
             />
 
-            {/* Top Indicator Pip & Label */}
-            <rect
-              x={x1}
-              y={20}
-              width={Math.min(rectWidth, 120)}
-              height={16}
-              fill={isHigh ? "var(--danger)" : "var(--warning)"}
-              opacity="0.9"
-              rx="2"
-            />
-            <text
-              x={x1 + 4}
-              y={32}
-              fontFamily="var(--font-mono)"
-              fontSize="9px"
-              fill="#FFFFFF"
-              fontWeight="600"
-            >
-              PRESSURE PT ({pp.severity.toUpperCase()})
-            </text>
+            {/* Pressure Point Top Badge */}
+            <g transform={`translate(${x1}, 10)`}>
+              <rect
+                x="0"
+                y="0"
+                width={Math.min(rectWidth, 140)}
+                height="16"
+                rx="3"
+                fill={isHigh ? "var(--danger)" : "var(--warning)"}
+              />
+              <text
+                x={Math.min(rectWidth, 140) / 2}
+                y="11"
+                textAnchor="middle"
+                fontFamily="var(--font-mono)"
+                fontSize="9px"
+                fill="#FFFFFF"
+                fontWeight="700"
+                letterSpacing="0.04em"
+              >
+                PRESSURE PT ({pp.severity.toUpperCase()})
+              </text>
+            </g>
           </g>
         );
       })}
     </g>
   );
 };
+

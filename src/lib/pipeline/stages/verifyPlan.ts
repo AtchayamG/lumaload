@@ -3,7 +3,7 @@ import { Recommendation, VerificationResult } from "@/lib/contracts/plan";
 import { getEvidenceById } from "@/lib/evidence/registry";
 import { findBannedPhrases } from "@/lib/safety/language";
 import { isRestrictedEvent } from "@/lib/safety/restrictedActivities";
-import { AIProvider } from "@/lib/ai/provider";
+import { AIProvider, VerifyBatchItem } from "@/lib/ai/provider";
 
 export interface VerifyPlanOutput {
   verifiedRecommendations: Recommendation[];
@@ -55,7 +55,7 @@ export async function verifyPlan(
   events: DayEvent[],
   provider: AIProvider
 ): Promise<VerifyPlanOutput> {
-  const verified: Recommendation[] = [];
+  const candidateRecommendations: Recommendation[] = [];
   const unsupportedClaimsRemoved: string[] = [];
   const bannedLanguageRemoved: string[] = [];
   const eventMap = new Map(events.map((e) => [e.id, e]));
@@ -137,44 +137,37 @@ export async function verifyPlan(
     }
 
     // Candidate passed Gates 1-6
-    verified.push(rec);
+    candidateRecommendations.push(rec);
   }
 
-  // Gate 7: Run model verifier check in parallel for candidates that passed Gates 1-6
+  // Gate 7: BATCH model verifier check (single model call for all candidates)
   const finalVerified: Recommendation[] = [];
-  const checks = await Promise.all(
-    verified.map(async (rec) => {
+
+  if (candidateRecommendations.length > 0) {
+    const batchItems: VerifyBatchItem[] = candidateRecommendations.map((rec) => {
       const citedChunks = rec.evidenceIds
         .map((id) => getEvidenceById(id))
         .filter(Boolean) as NonNullable<ReturnType<typeof getEvidenceById>>[];
-      const citedClaims = citedChunks.map((c) => c.claim);
+      return {
+        id: rec.id,
+        action: rec.action,
+        rationale: rec.rationale,
+        citedClaims: citedChunks.map((c) => c.claim),
+      };
+    });
 
-      try {
-        const modelCheck = await provider.verifyClaim(
-          rec.action,
-          rec.rationale,
-          citedClaims
+    const evaluations = await provider.verifyClaimsBatch(batchItems);
+    const evalMap = new Map(evaluations.map((ev) => [ev.id, ev]));
+
+    for (const rec of candidateRecommendations) {
+      const ev = evalMap.get(rec.id);
+      if (ev?.verdict === "overreaching") {
+        unsupportedClaimsRemoved.push(
+          `Purged recommendation "${rec.action}": claim overreaches cited clinical evidence (${ev.reason}).`
         );
-        return { rec, modelCheck };
-      } catch {
-        return {
-          rec,
-          modelCheck: {
-            verdict: "supported" as const,
-            reason: "Fallback approved.",
-          },
-        };
+      } else {
+        finalVerified.push(rec);
       }
-    })
-  );
-
-  for (const { rec, modelCheck } of checks) {
-    if (modelCheck.verdict === "overreaching") {
-      unsupportedClaimsRemoved.push(
-        `Purged recommendation "${rec.action}": claim overreaches cited clinical evidence (${modelCheck.reason}).`
-      );
-    } else {
-      finalVerified.push(rec);
     }
   }
 

@@ -149,6 +149,9 @@ export async function runAnalysisPipeline(
     }),
   ]);
 
+  const pipelineStart = t1Start;
+  const PIPELINE_BUDGET_MS = 18000;
+
   const d3 = Math.max(1, Date.now() - t3Start);
   modelUsed = structureResult.modelUsed;
 
@@ -159,7 +162,9 @@ export async function runAnalysisPipeline(
     durationMs: d3,
     kind: structureResult.usedFallback ? "deterministic" : "model",
     detail: structureResult.usedFallback
-      ? "Structured loads via deterministic category priors and duration/environment heuristics (rules engine)."
+      ? structureResult.errorDetail
+        ? `Fallback to rules engine (${structureResult.errorDetail}).`
+        : "Structured loads via deterministic category priors and duration/environment heuristics."
       : `Classified ${structureResult.activityLoads.length} event demand vectors via ${structureResult.modelUsed}.`,
     itemsIn: sanitizedEvents.length,
     itemsOut: structureResult.activityLoads.length,
@@ -169,24 +174,40 @@ export async function runAnalysisPipeline(
   // Stage 5: Compose Plan (Model with Deterministic Fallback)
   // ----------------------------------------------------
   const t5Start = Date.now();
-  let composeOutput = await provider
-    .composePlan(
+  const timeRemaining = PIPELINE_BUDGET_MS - (Date.now() - pipelineStart);
+  
+  let composeOutput;
+  if (timeRemaining < 4000) {
+    // Budget constrained, fall back to rules engine immediately
+    const fallback = new DeterministicProvider();
+    composeOutput = await fallback.composePlan(
       sanitizedEvents,
       symptoms,
       context,
       dayLoad.capacity.baseline,
       retrievedEvidence
-    )
-    .catch((err) => {
-      const fallback = new DeterministicProvider();
-      return fallback.composePlan(
+    );
+    composeOutput.errorDetail = "Pipeline budget expired (running fast deterministic fallback)";
+  } else {
+    composeOutput = await provider
+      .composePlan(
         sanitizedEvents,
         symptoms,
         context,
         dayLoad.capacity.baseline,
         retrievedEvidence
-      );
-    });
+      )
+      .catch((err) => {
+        const fallback = new DeterministicProvider();
+        return fallback.composePlan(
+          sanitizedEvents,
+          symptoms,
+          context,
+          dayLoad.capacity.baseline,
+          retrievedEvidence
+        );
+      });
+  }
 
   if (composeOutput.modelUsed) {
     modelUsed = composeOutput.modelUsed;
@@ -200,7 +221,9 @@ export async function runAnalysisPipeline(
     durationMs: d5,
     kind: composeOutput.usedFallback ? "deterministic" : "model",
     detail: composeOutput.usedFallback
-      ? `Synthesized ${composeOutput.recommendations.length} recommendations via deterministic rules engine.`
+      ? composeOutput.errorDetail
+        ? `Fallback to rules engine (${composeOutput.errorDetail}).`
+        : `Synthesized ${composeOutput.recommendations.length} recommendations via deterministic rules engine.`
       : `Synthesized ${composeOutput.recommendations.length} recommendations via ${composeOutput.modelUsed} grounded in retrieved evidence.`,
     itemsIn: retrievedEvidence.length,
     itemsOut: composeOutput.recommendations.length,

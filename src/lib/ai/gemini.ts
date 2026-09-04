@@ -6,34 +6,55 @@ import {
   AIProvider,
   ComposePlanResult,
   StructureActivitiesResult,
+  VerifyBatchItem,
+  VerifyBatchResultItem,
   VerifyClaimResult,
 } from "./provider";
 import { DeterministicProvider } from "./deterministic";
 import {
+  buildBatchVerifierPrompt,
   buildComposePlanPrompt,
   buildStructureActivitiesPrompt,
   buildVerifierCheckPrompt,
 } from "./prompts";
-import { z } from "zod";
+
+/**
+ * Global cache of working model ID across lambda invocations
+ */
+let cachedWorkingModel: string | null = null;
+
+const MODEL_CASCADE = [
+  "gemini-3.8-flash",
+  "gemini-3.5-flash",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+];
+
+const TIMEOUT_MS = 8000;
+const VERIFIER_TIMEOUT_MS = 5000;
+
+function extractErrorString(err: unknown): string {
+  const e = err as { name?: string; message?: string; status?: number; code?: number };
+  const parts: string[] = [];
+  if (e.name) parts.push(e.name);
+  if (e.status || e.code) parts.push(`(code ${e.status || e.code})`);
+  if (e.message) parts.push(`: ${e.message}`);
+  return parts.join(" ") || "Unknown error";
+}
 
 /**
  * LOGGING PRIVACY NOTICE:
  * Log only request id, stage name, status, duration, error class, and model name.
  * NEVER log symptoms, event labels, prompts, or raw model responses.
  */
-function safeLog(stage: string, status: string, durationMs: number, errorClass?: string) {
-  // Safe anonymous execution metric logging only
-  if (process.env.NODE_ENV !== "production") {
-    console.log(
-      `[Pipeline Log] stage=${stage} status=${status} duration=${durationMs}ms${
-        errorClass ? ` error=${errorClass}` : ""
-      }`
-    );
-  }
+function safeLog(stage: string, status: string, durationMs: number, errorDetail?: string) {
+  console.log(
+    `[Pipeline Log] stage=${stage} status=${status} duration=${durationMs}ms${
+      errorDetail ? ` error=${errorDetail}` : ""
+    }`
+  );
 }
-
-const MODEL_NAME = "gemini-3.8-flash";
-const TIMEOUT_MS = 20000;
 
 export class GeminiProvider implements AIProvider {
   name = "GeminiProvider";
@@ -47,7 +68,7 @@ export class GeminiProvider implements AIProvider {
       try {
         this.client = new GoogleGenAI({ apiKey });
       } catch (e) {
-        console.warn("Failed to initialize GoogleGenAI client, using fallback:", (e as Error).name);
+        console.warn("Failed to initialize GoogleGenAI client:", (e as Error).message);
         this.client = null;
       }
     }
@@ -61,6 +82,50 @@ export class GeminiProvider implements AIProvider {
     return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
   }
 
+  /**
+   * Executes a model call using the cascade: tries cached working model first,
+   * or iterates down MODEL_CASCADE until one succeeds.
+   */
+  private async executeWithModelCascade(
+    contents: string,
+    timeoutMs = TIMEOUT_MS
+  ): Promise<{ text: string; modelUsed: string }> {
+    if (!this.client) {
+      throw new Error("Gemini client not initialized");
+    }
+
+    const candidateList = cachedWorkingModel
+      ? [cachedWorkingModel, ...MODEL_CASCADE.filter((m) => m !== cachedWorkingModel)]
+      : MODEL_CASCADE;
+
+    let lastError: unknown = null;
+
+    for (const model of candidateList) {
+      try {
+        const res = await this.callWithTimeout(
+          this.client.models.generateContent({
+            model,
+            contents,
+            config: {
+              responseMimeType: "application/json",
+            },
+          }),
+          timeoutMs
+        );
+
+        if (res.text) {
+          cachedWorkingModel = model;
+          return { text: res.text, modelUsed: model };
+        }
+      } catch (err) {
+        lastError = err;
+        // Continue cascade to next candidate
+      }
+    }
+
+    throw lastError || new Error("All cascade models failed");
+  }
+
   async structureActivities(
     events: DayEvent[],
     symptoms: Symptoms
@@ -72,19 +137,8 @@ export class GeminiProvider implements AIProvider {
     const start = Date.now();
     try {
       const prompt = buildStructureActivitiesPrompt(events, symptoms);
-      const res = await this.callWithTimeout(
-        this.client.models.generateContent({
-          model: MODEL_NAME,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-          },
-        })
-      );
-
+      const { text, modelUsed } = await this.executeWithModelCascade(prompt, TIMEOUT_MS);
       const duration = Date.now() - start;
-      const text = res.text;
-      if (!text) throw new Error("Empty model response for structure activities");
 
       const parsed = JSON.parse(text);
       const loadsArray = Array.isArray(parsed) ? parsed : parsed.activities || parsed.loads;
@@ -93,7 +147,6 @@ export class GeminiProvider implements AIProvider {
         throw new Error("Model response did not contain array of activity loads");
       }
 
-      // Map back and validate
       const eventMap = new Map(events.map((e) => [e.id, e]));
       const activityLoads: ActivityLoad[] = loadsArray
         .filter((item) => eventMap.has(item.eventId))
@@ -114,13 +167,18 @@ export class GeminiProvider implements AIProvider {
       safeLog("structure_activities", "ok", duration);
       return {
         activityLoads,
-        modelUsed: MODEL_NAME,
+        modelUsed,
         usedFallback: false,
       };
     } catch (err) {
       const duration = Date.now() - start;
-      safeLog("structure_activities", "fallback", duration, (err as Error).name);
-      return this.fallbackProvider.structureActivities(events, symptoms);
+      const errorDetail = extractErrorString(err);
+      safeLog("structure_activities", "fallback", duration, errorDetail);
+      const fallbackResult = await this.fallbackProvider.structureActivities(events, symptoms);
+      return {
+        ...fallbackResult,
+        errorDetail,
+      };
     }
   }
 
@@ -151,19 +209,8 @@ export class GeminiProvider implements AIProvider {
         retrievedEvidence
       );
 
-      const res = await this.callWithTimeout(
-        this.client.models.generateContent({
-          model: MODEL_NAME,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-          },
-        })
-      );
-
+      const { text, modelUsed } = await this.executeWithModelCascade(prompt, TIMEOUT_MS);
       const duration = Date.now() - start;
-      const text = res.text;
-      if (!text) throw new Error("Empty model response for compose plan");
 
       const parsed = JSON.parse(text);
       const recsArray = Array.isArray(parsed) ? parsed : parsed.recommendations;
@@ -202,19 +249,24 @@ export class GeminiProvider implements AIProvider {
       safeLog("compose_plan", "ok", duration);
       return {
         recommendations: validRecs.slice(0, 5),
-        modelUsed: MODEL_NAME,
+        modelUsed,
         usedFallback: false,
       };
     } catch (err) {
       const duration = Date.now() - start;
-      safeLog("compose_plan", "fallback", duration, (err as Error).name);
-      return this.fallbackProvider.composePlan(
+      const errorDetail = extractErrorString(err);
+      safeLog("compose_plan", "fallback", duration, errorDetail);
+      const fallbackResult = await this.fallbackProvider.composePlan(
         events,
         symptoms,
         context,
         capacityBaseline,
         retrievedEvidence
       );
+      return {
+        ...fallbackResult,
+        errorDetail,
+      };
     }
   }
 
@@ -229,19 +281,7 @@ export class GeminiProvider implements AIProvider {
 
     try {
       const prompt = buildVerifierCheckPrompt(action, rationale, citedClaims);
-      const res = await this.callWithTimeout(
-        this.client.models.generateContent({
-          model: MODEL_NAME,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-          },
-        }),
-        8000
-      );
-
-      const text = res.text;
-      if (!text) throw new Error("Empty verifier response");
+      const { text } = await this.executeWithModelCascade(prompt, VERIFIER_TIMEOUT_MS);
       const parsed = JSON.parse(text);
 
       if (parsed.verdict === "overreaching" || parsed.verdict === "supported") {
@@ -253,6 +293,51 @@ export class GeminiProvider implements AIProvider {
       return { verdict: "supported", reason: "Defaulted to supported." };
     } catch {
       return this.fallbackProvider.verifyClaim(action, rationale, citedClaims);
+    }
+  }
+
+  async verifyClaimsBatch(
+    items: VerifyBatchItem[]
+  ): Promise<VerifyBatchResultItem[]> {
+    if (!this.client || items.length === 0) {
+      return this.fallbackProvider.verifyClaimsBatch(items);
+    }
+
+    const start = Date.now();
+    try {
+      const prompt = buildBatchVerifierPrompt(items);
+      const { text } = await this.executeWithModelCascade(prompt, VERIFIER_TIMEOUT_MS);
+      const duration = Date.now() - start;
+
+      const parsed = JSON.parse(text);
+      const evaluations = parsed.evaluations;
+
+      if (!Array.isArray(evaluations)) {
+        throw new Error("Batch verifier response did not contain evaluations array");
+      }
+
+      const evalMap = new Map<string, { verdict: "supported" | "overreaching"; reason: string }>();
+      for (const ev of evaluations) {
+        if (ev.id && (ev.verdict === "supported" || ev.verdict === "overreaching")) {
+          evalMap.set(ev.id, {
+            verdict: ev.verdict,
+            reason: String(ev.reason || "Model verification judgment"),
+          });
+        }
+      }
+
+      safeLog("verify_plan_batch", "ok", duration);
+      return items.map((item) => {
+        const found = evalMap.get(item.id);
+        if (found) {
+          return { id: item.id, ...found };
+        }
+        return { id: item.id, verdict: "supported", reason: "Defaulted to supported." };
+      });
+    } catch (err) {
+      const duration = Date.now() - start;
+      safeLog("verify_plan_batch", "fallback", duration, extractErrorString(err));
+      return this.fallbackProvider.verifyClaimsBatch(items);
     }
   }
 }

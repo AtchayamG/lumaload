@@ -9,6 +9,8 @@
 
 html, body {
   min-height: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   background-color: var(--canvas);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -75,9 +77,11 @@ code, pre, kbd, samp {
 
 /* Utility Containers */
 .container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--space-4);
+  box-sizing: border-box;
 }
 
 /* Persistent Disclaimer Chrome */
@@ -86,6 +90,9 @@ code, pre, kbd, samp {
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
   background-color: var(--surface);
   border-top: 1px solid var(--hairline);
   padding: var(--space-2) var(--space-4);
@@ -93,4 +100,6 @@ code, pre, kbd, samp {
   color: var(--muted);
   text-align: center;
   z-index: 999;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }

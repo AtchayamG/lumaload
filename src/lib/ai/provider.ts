@@ -6,15 +6,30 @@ export interface StructureActivitiesResult {
   activityLoads: ActivityLoad[];
   modelUsed: string | null;
   usedFallback: boolean;
+  errorDetail?: string;
 }
 
 export interface ComposePlanResult {
   recommendations: Recommendation[];
   modelUsed: string | null;
   usedFallback: boolean;
+  errorDetail?: string;
 }
 
 export interface VerifyClaimResult {
+  verdict: "supported" | "overreaching";
+  reason: string;
+}
+
+export interface VerifyBatchItem {
+  id: string;
+  action: string;
+  rationale: string;
+  citedClaims: string[];
+}
+
+export interface VerifyBatchResultItem {
+  id: string;
   verdict: "supported" | "overreaching";
   reason: string;
 }
@@ -40,4 +55,8 @@ export interface AIProvider {
     rationale: string,
     citedClaims: string[]
   ): Promise<VerifyClaimResult>;
+
+  verifyClaimsBatch(
+    items: VerifyBatchItem[]
+  ): Promise<VerifyBatchResultItem[]>;
 }

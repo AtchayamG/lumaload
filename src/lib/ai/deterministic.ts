@@ -203,4 +203,31 @@ export class DeterministicProvider implements AIProvider {
       reason: "Statement adheres to low-risk pacing principles in cited evidence.",
     };
   }
+
+  async verifyClaimsBatch(
+    items: Array<{ id: string; action: string; rationale: string; citedClaims: string[] }>
+  ): Promise<Array<{ id: string; verdict: "supported" | "overreaching"; reason: string }>> {
+    return items.map((item) => {
+      const combined = `${item.action} ${item.rationale}`;
+      if (containsBannedLanguage(combined)) {
+        return {
+          id: item.id,
+          verdict: "overreaching",
+          reason: "Contains banned clinical or diagnostic language.",
+        };
+      }
+      if (item.citedClaims.length === 0) {
+        return {
+          id: item.id,
+          verdict: "overreaching",
+          reason: "No evidence claims provided to support statement.",
+        };
+      }
+      return {
+        id: item.id,
+        verdict: "supported",
+        reason: "Statement adheres to low-risk pacing principles in cited evidence.",
+      };
+    });
+  }
 }
