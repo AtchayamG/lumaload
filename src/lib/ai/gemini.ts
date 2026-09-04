@@ -37,8 +37,8 @@ export const MODEL_CASCADE = [
   "gemini-3.5-flash",
 ];
 
-const TIMEOUT_MS = 15000;
-const VERIFIER_TIMEOUT_MS = 5000;
+const TIMEOUT_MS = 20000;
+const VERIFIER_TIMEOUT_MS = 6000;
 
 function extractErrorString(err: unknown): string {
   const e = err as { name?: string; message?: string; status?: number; code?: number };
@@ -47,6 +47,36 @@ function extractErrorString(err: unknown): string {
   if (e.status || e.code) parts.push(`(code ${e.status || e.code})`);
   if (e.message) parts.push(`: ${e.message}`);
   return parts.join(" ") || "Unknown error";
+}
+
+function cleanAndParseJson(raw: string): any {
+  let cleaned = raw.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
+  }
+  try {
+    return JSON.parse(cleaned);
+  } catch (err) {
+    const noTrailing = cleaned.replace(/,\s*([}\]])/g, "$1");
+    try {
+      return JSON.parse(noTrailing);
+    } catch {
+      const firstBracket = noTrailing.indexOf("[");
+      const firstBrace = noTrailing.indexOf("{");
+      if (firstBracket !== -1 && (firstBrace === -1 || firstBracket < firstBrace)) {
+        const lastBracket = noTrailing.lastIndexOf("]");
+        if (lastBracket > firstBracket) {
+          return JSON.parse(noTrailing.slice(firstBracket, lastBracket + 1));
+        }
+      } else if (firstBrace !== -1) {
+        const lastBrace = noTrailing.lastIndexOf("}");
+        if (lastBrace > firstBrace) {
+          return JSON.parse(noTrailing.slice(firstBrace, lastBrace + 1));
+        }
+      }
+      throw err;
+    }
+  }
 }
 
 /**
@@ -150,7 +180,7 @@ export class GeminiProvider implements AIProvider {
       const { text, modelUsed } = await this.executeWithModelCascade(prompt, TIMEOUT_MS);
       const duration = Date.now() - start;
 
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJson(text);
       const loadsArray = Array.isArray(parsed) ? parsed : parsed.activities || parsed.loads;
 
       if (!Array.isArray(loadsArray)) {
@@ -222,7 +252,7 @@ export class GeminiProvider implements AIProvider {
       const { text, modelUsed } = await this.executeWithModelCascade(prompt, TIMEOUT_MS);
       const duration = Date.now() - start;
 
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJson(text);
       const recsArray = Array.isArray(parsed) ? parsed : parsed.recommendations;
 
       if (!Array.isArray(recsArray)) {
@@ -292,7 +322,7 @@ export class GeminiProvider implements AIProvider {
     try {
       const prompt = buildVerifierCheckPrompt(action, rationale, citedClaims);
       const { text } = await this.executeWithModelCascade(prompt, VERIFIER_TIMEOUT_MS);
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJson(text);
 
       if (parsed.verdict === "overreaching" || parsed.verdict === "supported") {
         return {
@@ -319,7 +349,7 @@ export class GeminiProvider implements AIProvider {
       const { text } = await this.executeWithModelCascade(prompt, VERIFIER_TIMEOUT_MS);
       const duration = Date.now() - start;
 
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJson(text);
       const evaluations = parsed.evaluations;
 
       if (!Array.isArray(evaluations)) {
