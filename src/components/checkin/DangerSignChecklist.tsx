@@ -49,7 +49,7 @@ export const DangerSignChecklist: React.FC<DangerSignChecklistProps> = ({
         >
           CDC Danger Signs Screen
         </div>
-        <h3
+        <h2
           style={{
             fontSize: "1.25rem",
             fontWeight: 700,
@@ -58,7 +58,7 @@ export const DangerSignChecklist: React.FC<DangerSignChecklistProps> = ({
           }}
         >
           Do you or the person recovering have any of the following?
-        </h3>
+        </h2>
         <p style={{ fontSize: "0.9375rem", color: "var(--muted)", lineHeight: 1.5 }}>
           If any of these signs are present, normal planning is stopped immediately to
           direct you to emergency medical care.

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { Symptoms } from "@/lib/contracts/day";
@@ -44,7 +44,7 @@ export const SymptomSection: React.FC<SymptomSectionProps> = ({
         Step 3: Symptom Inventory
       </div>
 
-      <h3
+      <h2
         style={{
           fontSize: "1.25rem",
           fontWeight: 700,
@@ -53,7 +53,7 @@ export const SymptomSection: React.FC<SymptomSectionProps> = ({
         }}
       >
         Current Symptom Severity (0–10)
-      </h3>
+      </h2>
 
       <p
         style={{

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { RecoveryContext, RecoverySetting } from "@/lib/contracts/day";
@@ -50,7 +50,7 @@ export const ContextForm: React.FC<ContextFormProps> = ({
         Recovery Context
       </div>
 
-      <h3
+      <h2
         style={{
           fontSize: "1.25rem",
           fontWeight: 700,
@@ -59,7 +59,7 @@ export const ContextForm: React.FC<ContextFormProps> = ({
         }}
       >
         Current Environment & Coping
-      </h3>
+      </h2>
 
       <p
         style={{

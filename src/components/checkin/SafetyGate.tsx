@@ -40,7 +40,7 @@ export const SafetyGate: React.FC<SafetyGateProps> = ({
         Step 1: Clinical Gate
       </div>
 
-      <h3
+      <h2
         style={{
           fontSize: "1.25rem",
           fontWeight: 700,
@@ -49,7 +49,7 @@ export const SafetyGate: React.FC<SafetyGateProps> = ({
         }}
       >
         Has a healthcare professional evaluated this head injury?
-      </h3>
+      </h2>
 
       <p
         style={{
