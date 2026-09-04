@@ -13,7 +13,7 @@
 |---|---|---|---|---|
 | **CP1** | 16:08 – 16:50 IST | Scaffold, tokens, contracts, evidence registry, priors, Maya fixture | **DONE (GREEN)** | 11/11 tests pass; tsc green |
 | **CP2** | 16:50 – 19:00 IST | Safety engine + tests; load/capacity engine; ribbon rendering fixture | **DONE (GREEN)** | 32/32 tests pass; build green |
-| **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **DONE (GREEN)** | 37/37 tests pass; deploying to Vercel |
+| **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **DONE (LIVE)** | Live at https://lumaload.vercel.app |
 | **CP4** | 21:00 – 00:30 IST | S2/S4/S5 screens, Why drawer, Glass Box trace, distress signpost, before/after | **IN PROGRESS** | End-to-end integration pass |
 | **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **QUEUED** | Lighthouse score >= 95 |
 | **FREEZE**| 02:30 IST | Feature freeze & regression lock | **QUEUED** | CI test pass & clean staging |

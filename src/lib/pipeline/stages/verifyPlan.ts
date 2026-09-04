@@ -136,29 +136,53 @@ export async function verifyPlan(
       continue;
     }
 
-    // Gate 7: Verifier model check for overreaching claims
-    const citedClaims = validChunks.map((c) => c.claim);
-    try {
-      const modelCheck = await provider.verifyClaim(rec.action, rec.rationale, citedClaims);
-      if (modelCheck.verdict === "overreaching") {
-        unsupportedClaimsRemoved.push(
-          `Purged recommendation "${rec.action}": claim overreaches cited clinical evidence (${modelCheck.reason}).`
-        );
-        continue;
-      }
-    } catch {
-      // If verifier call fails, fallback allows deterministic acceptance if previous 6 gates passed
-    }
-
-    // All gates passed!
+    // Candidate passed Gates 1-6
     verified.push(rec);
+  }
+
+  // Gate 7: Run model verifier check in parallel for candidates that passed Gates 1-6
+  const finalVerified: Recommendation[] = [];
+  const checks = await Promise.all(
+    verified.map(async (rec) => {
+      const citedChunks = rec.evidenceIds
+        .map((id) => getEvidenceById(id))
+        .filter(Boolean) as NonNullable<ReturnType<typeof getEvidenceById>>[];
+      const citedClaims = citedChunks.map((c) => c.claim);
+
+      try {
+        const modelCheck = await provider.verifyClaim(
+          rec.action,
+          rec.rationale,
+          citedClaims
+        );
+        return { rec, modelCheck };
+      } catch {
+        return {
+          rec,
+          modelCheck: {
+            verdict: "supported" as const,
+            reason: "Fallback approved.",
+          },
+        };
+      }
+    })
+  );
+
+  for (const { rec, modelCheck } of checks) {
+    if (modelCheck.verdict === "overreaching") {
+      unsupportedClaimsRemoved.push(
+        `Purged recommendation "${rec.action}": claim overreaches cited clinical evidence (${modelCheck.reason}).`
+      );
+    } else {
+      finalVerified.push(rec);
+    }
   }
 
   const grounded = unsupportedClaimsRemoved.length === 0;
   const boundaryPassed = bannedLanguageRemoved.length === 0;
 
   return {
-    verifiedRecommendations: verified,
+    verifiedRecommendations: finalVerified,
     verification: {
       grounded,
       boundaryPassed,

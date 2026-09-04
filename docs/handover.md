@@ -28,8 +28,12 @@ Checkpoint 3 (CP3) has reached completion with the delivery of the complete Glas
 
 ## 2. Deploy Status
 
-- **Current Environment:** Production build green.
-- **Deploy Action:** Pushing to GitHub `AtchayamG/lumaload` and deploying to Vercel with `GEMINI_API_KEY`.
+- **Current Environment:** Production Live on Vercel
+- **Live Production URL:** [https://lumaload.vercel.app](https://lumaload.vercel.app)
+- **GitHub Repository:** [https://github.com/AtchayamG/lumaload](https://github.com/AtchayamG/lumaload)
+- **Live Health Endpoint:** [https://lumaload.vercel.app/api/health](https://lumaload.vercel.app/api/health)
+- **Verified Response:** `{ status: "ok", model: "configured", version: "0.1.0" }`
+- **Live Pipeline Endpoint:** `POST https://lumaload.vercel.app/api/analyze-day` tested and verified returning verified recommendations and 7-stage Glass Box traces.
 
 ---
 
