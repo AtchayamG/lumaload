@@ -37,7 +37,7 @@ export const MODEL_CASCADE = [
   "gemini-3.5-flash",
 ];
 
-const TIMEOUT_MS = 8000;
+const TIMEOUT_MS = 15000;
 const VERIFIER_TIMEOUT_MS = 5000;
 
 function extractErrorString(err: unknown): string {
