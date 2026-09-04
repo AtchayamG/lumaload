@@ -13,13 +13,13 @@ interface ModelTestResult {
   latencyMs: number;
 }
 
-function callWithTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
-  let timer: NodeJS.Timeout;
-  const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-}
+  function callWithTimeout<T>(promise: Promise<T>, ms = 5000): Promise<T> {
+    let timer: NodeJS.Timeout;
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms);
+    });
+    return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+  }
 
 export async function GET() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -76,7 +76,6 @@ export async function GET() {
 
   // If primary model failed, test the cascade models
   const cascadeCandidates = [
-    "gemini-3.5-flash",
     "gemini-2.5-flash",
   ];
 
