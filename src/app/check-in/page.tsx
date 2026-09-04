@@ -27,6 +27,10 @@ export default function CheckInPage() {
   const [savedToast, setSavedToast] = useState(false);
   const hasEmergency = dangerSignsSelected.length > 0;
 
+  React.useEffect(() => {
+    document.title = "Check-In & Safety Gate · LumaLoad";
+  }, []);
+
   const handleProceed = () => {
     setSavedToast(true);
     setTimeout(() => {
@@ -36,6 +40,7 @@ export default function CheckInPage() {
 
   return (
     <main
+      id="main-content"
       style={{
         minHeight: "100vh",
         backgroundColor: "var(--canvas)",

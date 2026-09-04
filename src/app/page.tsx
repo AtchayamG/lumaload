@@ -25,6 +25,10 @@ export default function StoryPage() {
     [mayaEvents, maya.symptoms]
   );
 
+  React.useEffect(() => {
+    document.title = "LumaLoad — Recovery Load OS";
+  }, []);
+
   const handleTryMaya = () => {
     loadPersona("maya-day-5");
     router.push("/canvas");

@@ -26,6 +26,10 @@ export default function TracePage() {
 
   const [isRerunning, setIsRerunning] = React.useState(false);
 
+  React.useEffect(() => {
+    document.title = "Glass Box Execution Trace · LumaLoad";
+  }, []);
+
   const handleLoadMayaDemo = () => {
     loadPersona("maya-day-5");
     const demoTrace: TraceStage[] = [
@@ -72,6 +76,7 @@ export default function TracePage() {
   if (!analysisResult) {
     return (
       <main
+        id="main-content"
         style={{
           minHeight: "100vh",
           backgroundColor: "var(--canvas)",
@@ -257,6 +262,7 @@ export default function TracePage() {
 
   return (
     <main
+      id="main-content"
       style={{
         minHeight: "100vh",
         backgroundColor: "var(--canvas)",

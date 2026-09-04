@@ -34,6 +34,10 @@ export default function PlanPage() {
   const [isRerunning, setIsRerunning] = React.useState(false);
   const allEvidence = useMemo(() => getAllEvidence(), []);
 
+  React.useEffect(() => {
+    document.title = "Your Daily Recovery Plan · LumaLoad";
+  }, []);
+
   const handleLoadMayaDemo = () => {
     loadPersona("maya-day-5");
     const demoTrace: TraceStage[] = [
@@ -83,6 +87,7 @@ export default function PlanPage() {
   if (hasEmergency) {
     return (
       <main
+        id="main-content"
         style={{
           minHeight: "100vh",
           backgroundColor: "var(--canvas)",
@@ -109,6 +114,7 @@ export default function PlanPage() {
   if (!analysisResult) {
     return (
       <main
+        id="main-content"
         style={{
           minHeight: "100vh",
           backgroundColor: "var(--canvas)",

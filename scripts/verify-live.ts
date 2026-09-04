@@ -266,8 +266,12 @@ async function main() {
       const hasPhy = texts.some((t) => t.text === "PHY" && t.y === "169");
 
       const paths = Array.from(document.querySelectorAll("svg path"));
-      const dashedPath = paths.some((p) => p.getAttribute("stroke-dasharray") === "5 4");
-      const dottedPath = paths.some((p) => p.getAttribute("stroke-dasharray") === "2 3");
+      const dashedPath = paths.some(
+        (p) => p.getAttribute("stroke-dasharray") === "7 4" || p.getAttribute("stroke-dasharray") === "5 4"
+      );
+      const dottedPath = paths.some(
+        (p) => p.getAttribute("stroke-dasharray") === "3 3" || p.getAttribute("stroke-dasharray") === "2 3"
+      );
       const solidPath = paths.some(
         (p) => p.getAttribute("stroke") === "var(--axis-physical)" && !p.getAttribute("stroke-dasharray")
       );

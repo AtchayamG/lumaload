@@ -29,6 +29,11 @@ export default function CanvasPage() {
 
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [announcement, setAnnouncement] = useState<string>("");
+
+  React.useEffect(() => {
+    document.title = "Recovery Load Canvas · LumaLoad";
+  }, []);
 
   const hasEmergency = dangerSignsSelected.length > 0;
 
@@ -41,6 +46,7 @@ export default function CanvasPage() {
   const handleAnalyzeDay = async () => {
     setAnalyzing(true);
     setAnalysisError(null);
+    setAnnouncement("Analyzing neurological load profile across cognitive, sensory, and physical axes...");
 
     try {
       const payload = {
@@ -65,13 +71,16 @@ export default function CanvasPage() {
       setAnalysisResult(data);
 
       if (data.status === "emergency_halt") {
+        setAnnouncement("Emergency danger sign detected. Presenting emergency clinical escalation instructions.");
         setDangerSigns(data.safety.dangerSignsSelected || ["Emergency sign detected"]);
       } else {
+        setAnnouncement("Analysis complete. Your personalized recovery plan is ready.");
         router.push("/plan");
       }
     } catch (err) {
       console.error("Failed to analyze day:", err);
       setAnalysisError((err as Error).message || "Analysis request failed.");
+      setAnnouncement("Analysis request failed. Please check your schedule and try again.");
     } finally {
       setAnalyzing(false);
     }
@@ -80,6 +89,7 @@ export default function CanvasPage() {
   if (hasEmergency) {
     return (
       <main
+        id="main-content"
         style={{
           minHeight: "100vh",
           backgroundColor: "var(--canvas)",
@@ -97,6 +107,7 @@ export default function CanvasPage() {
 
   return (
     <main
+      id="main-content"
       style={{
         minHeight: "100vh",
         backgroundColor: "var(--canvas)",
@@ -104,6 +115,24 @@ export default function CanvasPage() {
         paddingBottom: "var(--space-12)",
       }}
     >
+      {/* Screen reader live announcement region */}
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          padding: 0,
+          margin: "-1px",
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {announcement}
+      </div>
       {/* Navigation Header */}
       <header
         style={{
