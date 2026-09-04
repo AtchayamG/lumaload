@@ -1,4 +1,4 @@
-﻿import fs from "fs";
+import fs from "fs";
 import path from "path";
 import { DaySubmission } from "@/lib/contracts/day";
 import { AnalysisResponse } from "@/lib/contracts/plan";
@@ -49,6 +49,10 @@ export function findMatchingPrecomputed(
       if (entry && entry.response) {
         const response: AnalysisResponse = JSON.parse(JSON.stringify(entry.response));
 
+        const detail = entry.modelUsed
+          ? `Demo day analysed with ${entry.modelUsed}. Re-run live to call the model now.`
+          : "Demo day precomputed with deterministic rules engine (model quota exhausted during build). Re-run live to call the model now.";
+
         // Prepend served_from_precomputed trace stage
         const cacheStage = {
           name: "served_from_precomputed",
@@ -56,9 +60,10 @@ export function findMatchingPrecomputed(
           startedAt: Date.now() - 2,
           durationMs: 2,
           kind: "retrieval" as const,
-          detail: "Demo day analysed with gemini-3.8-flash on 4 Sep 2026. Re-run live to call the model now.",
+          detail,
         };
 
+        response.modelUsed = entry.modelUsed ?? null;
         response.trace = [cacheStage, ...response.trace];
         return response;
       }
