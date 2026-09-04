@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { setCachedWorkingModel } from "@/lib/ai/gemini";
 
 export const maxDuration = 30;
 
@@ -10,6 +11,14 @@ interface ModelTestResult {
   errorMessage?: string;
   status?: number;
   latencyMs: number;
+}
+
+function callWithTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
+  let timer: NodeJS.Timeout;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
 export async function GET() {
@@ -41,10 +50,13 @@ export async function GET() {
   };
 
   try {
-    const res = await ai.models.generateContent({
-      model: primaryModel,
-      contents: 'Reply with the JSON {"ok":true}',
-    });
+    const res = await callWithTimeout(
+      ai.models.generateContent({
+        model: primaryModel,
+        contents: 'Reply with the JSON {"ok":true}',
+      }),
+      8000
+    );
     primaryResult = {
       model: primaryModel,
       ok: true,
@@ -66,8 +78,6 @@ export async function GET() {
   const cascadeCandidates = [
     "gemini-3.5-flash",
     "gemini-2.5-flash",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
   ];
 
   const cascadeResults: ModelTestResult[] = [];
@@ -77,10 +87,13 @@ export async function GET() {
     for (const model of cascadeCandidates) {
       const cStart = Date.now();
       try {
-        await ai.models.generateContent({
-          model,
-          contents: 'Reply with the JSON {"ok":true}',
-        });
+        await callWithTimeout(
+          ai.models.generateContent({
+            model,
+            contents: 'Reply with the JSON {"ok":true}',
+          }),
+          8000
+        );
         const cLatency = Date.now() - cStart;
         cascadeResults.push({
           model,
@@ -102,6 +115,10 @@ export async function GET() {
         });
       }
     }
+  }
+
+  if (workingModel) {
+    setCachedWorkingModel(workingModel);
   }
 
   return NextResponse.json(

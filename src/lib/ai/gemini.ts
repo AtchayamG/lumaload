@@ -21,14 +21,20 @@ import {
 /**
  * Global cache of working model ID across lambda invocations
  */
-let cachedWorkingModel: string | null = null;
+export let cachedWorkingModel: string | null = null;
 
-const MODEL_CASCADE = [
+export function setCachedWorkingModel(model: string | null): void {
+  cachedWorkingModel = model;
+}
+
+export function getCachedWorkingModel(): string | null {
+  return cachedWorkingModel;
+}
+
+export const MODEL_CASCADE = [
   "gemini-3.8-flash",
   "gemini-3.5-flash",
   "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
 ];
 
 const TIMEOUT_MS = 8000;
@@ -119,6 +125,10 @@ export class GeminiProvider implements AIProvider {
         }
       } catch (err) {
         lastError = err;
+        safeLog("cascade_candidate_failed", "error", 0, `${model}: ${extractErrorString(err)}`);
+        if (model === cachedWorkingModel) {
+          cachedWorkingModel = null;
+        }
         // Continue cascade to next candidate
       }
     }
