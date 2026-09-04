@@ -1,0 +1,203 @@
+{
+  "$comment": "LumaLoad synthetic demo day fixtures. All personas are fictional.",
+  "personas": [
+    {
+      "id": "maya-day-5",
+      "name": "Maya (Day 5)",
+      "personaNote": "Synthetic persona — fictional student recovering from a clinician-diagnosed concussion",
+      "isFictional": true,
+      "symptoms": {
+        "headache": 4,
+        "dizziness": 2,
+        "lightNoise": 5,
+        "fogginess": 4,
+        "fatigue": 3,
+        "mood": 6,
+        "anxiety": 6,
+        "sleepQuality": 3
+      },
+      "context": {
+        "daysSinceInjury": 5,
+        "setting": "school",
+        "clinicianSeen": true,
+        "feelingUnableToCope": false
+      },
+      "dangerSigns": [],
+      "events": [
+        {
+          "id": "maya-ev-1",
+          "label": "Morning bus commute",
+          "startMinutes": 510,
+          "durationMinutes": 30,
+          "category": "commute_transit",
+          "environment": ["travel"]
+        },
+        {
+          "id": "maya-ev-2",
+          "label": "Biology lecture",
+          "startMinutes": 540,
+          "durationMinutes": 90,
+          "category": "lecture_class",
+          "environment": []
+        },
+        {
+          "id": "maya-ev-3",
+          "label": "Laptop assignment & write-up",
+          "startMinutes": 630,
+          "durationMinutes": 90,
+          "category": "laptop_work",
+          "environment": ["screen"]
+        },
+        {
+          "id": "maya-ev-4",
+          "label": "Lunch in busy campus cafeteria",
+          "startMinutes": 720,
+          "durationMinutes": 45,
+          "category": "meal",
+          "environment": ["crowded", "loud"]
+        },
+        {
+          "id": "maya-ev-5",
+          "label": "Project group video call",
+          "startMinutes": 780,
+          "durationMinutes": 60,
+          "category": "video_meeting",
+          "environment": ["screen"]
+        },
+        {
+          "id": "maya-ev-6",
+          "label": "Unbroken library study block",
+          "startMinutes": 840,
+          "durationMinutes": 120,
+          "category": "laptop_work",
+          "environment": ["screen"]
+        },
+        {
+          "id": "maya-ev-7",
+          "label": "Grocery store run",
+          "startMinutes": 990,
+          "durationMinutes": 40,
+          "category": "errand_shopping",
+          "environment": ["crowded", "bright"]
+        },
+        {
+          "id": "maya-ev-8",
+          "label": "Five-a-side football practice",
+          "startMinutes": 1080,
+          "durationMinutes": 60,
+          "category": "contact_sport",
+          "environment": []
+        }
+      ]
+    },
+    {
+      "id": "quieter-tuesday",
+      "name": "A Quieter Tuesday",
+      "personaNote": "Synthetic persona — lower-demand paced recovery day",
+      "isFictional": true,
+      "symptoms": {
+        "headache": 2,
+        "dizziness": 1,
+        "lightNoise": 2,
+        "fogginess": 2,
+        "fatigue": 2,
+        "mood": 2,
+        "anxiety": 2,
+        "sleepQuality": 8
+      },
+      "context": {
+        "daysSinceInjury": 12,
+        "setting": "both",
+        "clinicianSeen": true,
+        "feelingUnableToCope": false
+      },
+      "dangerSigns": [],
+      "events": [
+        {
+          "id": "quiet-ev-1",
+          "label": "Gentle neighborhood walk",
+          "startMinutes": 540,
+          "durationMinutes": 30,
+          "category": "short_walk",
+          "environment": ["outdoors", "quiet"]
+        },
+        {
+          "id": "quiet-ev-2",
+          "label": "Print textbook reading",
+          "startMinutes": 600,
+          "durationMinutes": 45,
+          "category": "reading",
+          "environment": ["quiet"]
+        },
+        {
+          "id": "quiet-ev-3",
+          "label": "Quiet lunch at home",
+          "startMinutes": 690,
+          "durationMinutes": 45,
+          "category": "meal",
+          "environment": ["quiet"]
+        },
+        {
+          "id": "quiet-ev-4",
+          "label": "Light household tidying",
+          "startMinutes": 810,
+          "durationMinutes": 30,
+          "category": "household_chores",
+          "environment": []
+        },
+        {
+          "id": "quiet-ev-5",
+          "label": "Quiet tea with a close friend",
+          "startMinutes": 900,
+          "durationMinutes": 60,
+          "category": "social_quiet",
+          "environment": ["quiet"]
+        },
+        {
+          "id": "quiet-ev-6",
+          "label": "Dinner & quiet wind-down",
+          "startMinutes": 1020,
+          "durationMinutes": 60,
+          "category": "meal",
+          "environment": ["quiet"]
+        }
+      ]
+    },
+    {
+      "id": "danger-sign-demo",
+      "name": "Safety Stop Demo",
+      "personaNote": "Synthetic test persona triggering CDC emergency danger sign hard stop",
+      "isFictional": true,
+      "symptoms": {
+        "headache": 8,
+        "dizziness": 6,
+        "lightNoise": 7,
+        "fogginess": 6,
+        "fatigue": 7,
+        "mood": 5,
+        "anxiety": 7,
+        "sleepQuality": 2
+      },
+      "context": {
+        "daysSinceInjury": 2,
+        "setting": "school",
+        "clinicianSeen": true,
+        "feelingUnableToCope": false
+      },
+      "dangerSigns": [
+        "A headache that gets worse and does not go away",
+        "Repeated vomiting or nausea"
+      ],
+      "events": [
+        {
+          "id": "danger-ev-1",
+          "label": "Class lecture",
+          "startMinutes": 540,
+          "durationMinutes": 60,
+          "category": "lecture_class",
+          "environment": []
+        }
+      ]
+    }
+  ]
+}

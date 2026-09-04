@@ -1,0 +1,128 @@
+/* LumaLoad Design Tokens — Neurological Load Cartography */
+
+:root {
+  /* Color Palette — Light Mode (Default) */
+  --canvas: #F4F2EC;
+  --surface: #FCFBF7;
+  --surface-raised: #FFFFFF;
+  --ink: #17252B;
+  --muted: #5D6A6C;
+  --hairline: #D8D5CC;
+  --hairline-strong: #B8B3A4;
+
+  /* Axis Colors */
+  --axis-cognitive: #1E6C73;
+  --axis-sensory: #C47B48;
+  --axis-physical: #5D7B55;
+  --axis-capacity: #7C6B8A;
+
+  /* Alert / Safety */
+  --danger: #A63F3F;
+  --danger-surface: #FBF1F1;
+  --danger-border: #E8B4B4;
+  --warning: #D9822B;
+  --warning-surface: #FEF8ED;
+  --warning-border: #F3D29D;
+  --success: #3D7A5A;
+  --success-surface: #EDF7F1;
+
+  /* Typography */
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Radii - strictly 2px and 4px */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-full: 9999px;
+
+  /* Elevation */
+  --shadow-subtle: 0 1px 2px rgba(23, 37, 43, 0.04);
+  --shadow-none: none;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Accessibility focus ring */
+  --focus-ring: 2px solid var(--axis-cognitive);
+  --focus-offset: 2px;
+}
+
+[data-theme="dark"] {
+  --canvas: #091215;
+  --surface: #101B1F;
+  --surface-raised: #16242A;
+  --ink: #E8EFEC;
+  --muted: #9AABA8;
+  --hairline: #1E2E33;
+  --hairline-strong: #2E454D;
+
+  /* Axis Colors in Dark Mode */
+  --axis-cognitive: #2E949D;
+  --axis-sensory: #E0915C;
+  --axis-physical: #779B6E;
+  --axis-capacity: #9B88AB;
+
+  /* Danger / Warning */
+  --danger: #C85A5A;
+  --danger-surface: #221214;
+  --danger-border: #522226;
+  --warning: #E89E4B;
+  --warning-surface: #221B12;
+  --warning-border: #523B1E;
+  --success: #5CA37C;
+  --success-surface: #122218;
+
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Low Stimulus Mode: Reduced contrast of decorative elements, no animations, maximum calm */
+[data-low-stimulus="true"] {
+  --canvas: #EFECE6;
+  --surface: #F7F5F0;
+  --surface-raised: #FAF9F6;
+  --hairline: #CCC8BE;
+  --muted: #556264;
+
+  /* Calmer, muted axis shades (still accessible >= 4.5:1) */
+  --axis-cognitive: #24585D;
+  --axis-sensory: #945B33;
+  --axis-physical: #4C6546;
+  --axis-capacity: #63556F;
+
+  --shadow-subtle: none;
+}
+
+[data-theme="dark"][data-low-stimulus="true"] {
+  --canvas: #0B1113;
+  --surface: #121A1D;
+  --surface-raised: #182226;
+  --hairline: #1D292D;
+  --muted: #83918F;
+
+  --axis-cognitive: #327F87;
+  --axis-sensory: #B8764B;
+  --axis-physical: #65845C;
+  --axis-capacity: #847392;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "$comment": "LumaLoad baseline activity priors (0-5 scale). Estimates only, not clinical metrics.",
+  "categories": {
+    "quiet_rest": {
+      "cognitive": 0,
+      "sensory": 0,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Quiet rest"
+    },
+    "sleep": {
+      "cognitive": 0,
+      "sensory": 0,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Sleep"
+    },
+    "short_walk": {
+      "cognitive": 1,
+      "sensory": 1,
+      "physical": 2,
+      "riskClass": "normal_daily_activity",
+      "label": "Short walk"
+    },
+    "reading": {
+      "cognitive": 3,
+      "sensory": 2,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Reading"
+    },
+    "laptop_work": {
+      "cognitive": 4,
+      "sensory": 4,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Laptop work"
+    },
+    "lecture_class": {
+      "cognitive": 4,
+      "sensory": 3,
+      "physical": 1,
+      "riskClass": "normal_daily_activity",
+      "label": "Lecture / class"
+    },
+    "video_meeting": {
+      "cognitive": 4,
+      "sensory": 5,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Video meeting"
+    },
+    "commute_transit": {
+      "cognitive": 2,
+      "sensory": 4,
+      "physical": 2,
+      "riskClass": "normal_daily_activity",
+      "label": "Commute / public transit"
+    },
+    "errand_shopping": {
+      "cognitive": 2,
+      "sensory": 4,
+      "physical": 2,
+      "riskClass": "normal_daily_activity",
+      "label": "Errand / shopping"
+    },
+    "social_quiet": {
+      "cognitive": 2,
+      "sensory": 1,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Quiet social time"
+    },
+    "social_crowded": {
+      "cognitive": 3,
+      "sensory": 5,
+      "physical": 1,
+      "riskClass": "normal_daily_activity",
+      "label": "Crowded social gathering"
+    },
+    "light_exercise": {
+      "cognitive": 1,
+      "sensory": 1,
+      "physical": 3,
+      "riskClass": "clinician_guided",
+      "label": "Light exercise"
+    },
+    "household_chores": {
+      "cognitive": 1,
+      "sensory": 2,
+      "physical": 3,
+      "riskClass": "normal_daily_activity",
+      "label": "Household chores"
+    },
+    "meal": {
+      "cognitive": 1,
+      "sensory": 2,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Meal"
+    },
+    "screen_leisure": {
+      "cognitive": 2,
+      "sensory": 4,
+      "physical": 0,
+      "riskClass": "normal_daily_activity",
+      "label": "Screen leisure"
+    },
+    "driving": {
+      "cognitive": 4,
+      "sensory": 4,
+      "physical": 1,
+      "riskClass": "restricted",
+      "label": "Driving"
+    },
+    "contact_sport": {
+      "cognitive": 3,
+      "sensory": 4,
+      "physical": 5,
+      "riskClass": "restricted",
+      "label": "Contact / collision sport"
+    }
+  }
+}
