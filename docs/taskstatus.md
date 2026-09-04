@@ -2,8 +2,8 @@
 
 **Target Event:** Hack for Humanity | Summer 2026 (Devpost)  
 **Lead Engineer:** Atchayam G (Solo)  
-**Last Updated:** 2026-09-04 18:05 IST  
-**Current Milestone:** Checkpoint 4.5 (CP4.5) Complete — Advancing to CP5
+**Last Updated:** 2026-09-04 18:32 IST  
+**Current Milestone:** Checkpoint 5 (CP5) Complete — Advancing to Feature Freeze & CP6
 
 ---
 
@@ -17,13 +17,43 @@
 | **CP3.5** | 17:00 – 17:25 IST | P0/P1 correction order: cascade, timeouts, diag route, overflow, splines | **DONE (LIVE)** | Live diag, 3.2s pipeline, viewports pass |
 | **CP4** | 21:00 – 00:30 IST | Five screens: S1 Story, S2 Check-In, S3 Canvas, S4 Plan, S5 Trace | **DONE (BUILD PASS)** | 11 static/dynamic pages compiled |
 | **CP4.5** | 17:35 – 18:05 IST | Interactive canvas, precomputed demos, unstacked ribbon, cold visit states | **DONE (LIVE VERIFIED)** | 8/8 Live Puppeteer browser tests pass on Vercel |
-| **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **IN PROGRESS** | Accessibility & touch target audit |
-| **FREEZE**| 02:30 IST | Feature freeze & regression lock | **QUEUED** | CI test pass & clean staging |
-| **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **QUEUED** | Devpost packet finalized |
+| **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **DONE (100% AUDIT)** | Lighthouse: 100/100 on all 5 routes; 0 failing audits |
+| **FREEZE**| 02:30 IST | Feature freeze & regression lock | **ACTIVE** | All tests pass, build green, deployed live |
+| **CP6** | 04:30 – 05:45 IST | README, screenshots, architecture graphics, Devpost submission draft | **IN PROGRESS** | Devpost packet & demo recording script |
 
 ---
 
 ## Detailed Milestone Status Reports
+
+### CP5 Accessibility & Low Stimulus Polish Report (Completed & 100% Audit Verified)
+- **Lighthouse Accessibility Audit Scores (Tested against live production URL https://lumaload.vercel.app):**
+  - **`/` (Screen S1 — Story):** **100 / 100** (0 failing audits)
+  - **`/canvas` (Screen S3 — Recovery Canvas & Ribbon):** **100 / 100** (0 failing audits)
+  - **`/check-in` (Screen S2 — Safety Gate & Symptom Inventory):** **100 / 100** (0 failing audits)
+  - **`/plan` (Screen S4 — Luma Plan):** **100 / 100** (0 failing audits)
+  - **`/trace` (Screen S5 — The Glass Box Audit):** **100 / 100** (0 failing audits)
+- **Full Keyboard Operability & Focus Rings:**
+  - Complete keyboard traversal verified across all interactive controls (Tab, Shift+Tab, Enter, Space, Escape).
+  - High-visibility 2px focus ring (`:focus-visible` with `outline: 2px solid var(--axis-cognitive)` and `outline-offset: 2px`).
+  - Added accessible skip link (`.skip-to-content:focus`) targeting `<main id="main-content">` across all 5 pages.
+  - EventEditor dialog supports full keyboard entry, multi-select tag toggling with Enter/Space, and Escape key dismissal.
+- **Touch Targets & Target Sizes:**
+  - Strictly enforced `>= 44x44px` on all interactive buttons, selects, and controls via `src/components/ui/Button.tsx` (`minHeight: 44px`, `minWidth: 44px`).
+- **prefers-reduced-motion:**
+  - Media query in `src/styles/tokens.css` zeroes all animations and transitions (`0.01ms !important`, `iteration-count: 1 !important`, `scroll-behavior: auto !important`).
+- **Low Stimulus Mode & WCAG AA Contrast:**
+  - Updated design tokens: Cognitive (`#1E6C73`, 5.9:1), Sensory (`#9E531D`, 5.5:1), Physical (`#466840`, 6.1:1), Capacity (`#695777`, 6.3:1) — all well exceeding WCAG AA requirement of 4.5:1 on light surfaces.
+  - Low Stimulus toggle persists in `localStorage` and disables all ambient motion while preserving contrast.
+- **Screen Reader Support & Headings:**
+  - Unique, route-specific `document.title` on all client pages.
+  - Semantic heading hierarchy enforced (`h1` -> `h2` -> `h3`) with zero skipped levels.
+  - Dynamic `aria-live="polite"` announcements on `/canvas` for pipeline start, completion, and safety alerts.
+- **Ribbon Greyscale Test (Carry-Over Item Verified):**
+  - High-contrast white halo underlays (`strokeWidth="4" opacity="0.8"`) added beneath centerlines.
+  - Distinct stroke patterns: Cognitive (`dashed 7 4`), Sensory (`dotted 3 3`), Physical (`solid`), with left-margin badges `[ COG ]`, `[ SEN ]`, `[ PHY ]`.
+  - Color and greyscale comparison screenshots saved in `scripts/ribbon-color.png` and `scripts/ribbon-grayscale.png`.
+- **Root README.md (Carry-Over Item Verified):**
+  - Publication-grade `README.md` created at repository root and pushed to both `master` and `main` branches. Includes 2-sentence summary, live URL, walkthrough, 3-bullet safety model, Responsible AI section, 6 verified evidence sources, and 7-stage Mermaid architecture diagram.
 
 ### CP4.5 Correction & Production Hardening Report (Completed & Live Verified)
 - **P0-0 (Interactive Canvas & EventEditor):**
