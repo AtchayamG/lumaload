@@ -1,0 +1,335 @@
+{
+  "fixtureId": "quieter-tuesday",
+  "computedAt": "2026-09-04T12:20:23.127Z",
+  "modelUsed": "gemini-3.8-flash",
+  "response": {
+    "status": "ok",
+    "safety": {
+      "dangerSignsDetected": false,
+      "dangerSignsSelected": [],
+      "restrictedEventIds": [],
+      "distressSignpostShown": false
+    },
+    "capacity": {
+      "baseline": 0.9,
+      "pressurePoints": [
+        {
+          "startMinutes": 600,
+          "endMinutes": 640,
+          "severity": "mild"
+        }
+      ]
+    },
+    "activityLoads": [
+      {
+        "eventId": "quiet-ev-1",
+        "cognitive": 0.9,
+        "sensory": 0.6,
+        "physical": 1.8,
+        "reasonCodes": [
+          "prior_short_walk",
+          "duration_short",
+          "env_quiet_reduction"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "quiet-ev-2",
+        "cognitive": 3,
+        "sensory": 1.7,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_reading",
+          "env_quiet_reduction"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "quiet-ev-3",
+        "cognitive": 1,
+        "sensory": 1.7,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_meal",
+          "env_quiet_reduction"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "quiet-ev-4",
+        "cognitive": 0.9,
+        "sensory": 1.8,
+        "physical": 2.8,
+        "reasonCodes": [
+          "prior_household_chores",
+          "duration_short"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "quiet-ev-5",
+        "cognitive": 2.2,
+        "sensory": 0.8,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_social_quiet",
+          "duration_extended",
+          "env_quiet_reduction"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "quiet-ev-6",
+        "cognitive": 1.1,
+        "sensory": 1.9,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_meal",
+          "duration_extended",
+          "env_quiet_reduction"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      }
+    ],
+    "recommendations": [],
+    "evidence": [
+      {
+        "id": "cdc-symptoms-002",
+        "sourceKey": "cdc-symptoms",
+        "title": "Concentration and processing-speed difficulty is a recognised symptom",
+        "organization": "CDC",
+        "url": "https://www.cdc.gov/traumatic-brain-injury/signs-symptoms/index.html",
+        "claim": "The CDC lists attention or concentration problems, feeling slowed down, and feeling foggy or groggy as cognitive symptoms of mild TBI and concussion.",
+        "allowedUses": [
+          "cognitive_accommodation",
+          "pacing",
+          "screen_breaks"
+        ],
+        "tags": [
+          "cognitive"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-symptoms-005",
+        "sourceKey": "cdc-symptoms",
+        "title": "Fatigue and low energy are recognised concussion symptoms",
+        "organization": "CDC",
+        "url": "https://www.cdc.gov/traumatic-brain-injury/signs-symptoms/index.html",
+        "claim": "The CDC lists feeling tired and having no energy as physical symptoms of mild TBI and concussion.",
+        "allowedUses": [
+          "pacing",
+          "capacity_awareness",
+          "rest_opportunity"
+        ],
+        "tags": [
+          "capacity",
+          "physical",
+          "fatigue"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-recovery-001",
+        "sourceKey": "cdc-recovery",
+        "title": "Rest helps most in the first few days",
+        "organization": "CDC",
+        "url": "https://www.cdc.gov/traumatic-brain-injury/response/index.html",
+        "claim": "The CDC states that resting is good in the first few days after a mild TBI or concussion, as this is when symptoms are more severe.",
+        "allowedUses": [
+          "rest_opportunity",
+          "pacing"
+        ],
+        "tags": [
+          "pacing",
+          "physical",
+          "cognitive"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-recovery-002",
+        "sourceKey": "cdc-recovery",
+        "title": "Ease back into regular activities after one or two days of rest",
+        "organization": "CDC",
+        "url": "https://www.cdc.gov/traumatic-brain-injury/response/index.html",
+        "claim": "The CDC states that after one or two days of rest it is important to ease back into regular activities, even while some mild symptoms are still present.",
+        "allowedUses": [
+          "gradual_activity",
+          "avoid_prolonged_rest",
+          "pacing"
+        ],
+        "tags": [
+          "pacing",
+          "cognitive",
+          "physical"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-001",
+        "sourceKey": "cdc-school",
+        "title": "Early return to school can shorten recovery and reduce mental health symptoms",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "The CDC states that most children can return to school within one to two days of a concussion even while experiencing symptoms, and that early return can shorten recovery and reduce the likelihood of mental health symptoms.",
+        "allowedUses": [
+          "gradual_activity",
+          "avoid_prolonged_rest",
+          "emotional_support",
+          "social_connection"
+        ],
+        "tags": [
+          "cognitive",
+          "capacity",
+          "school"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-002",
+        "sourceKey": "cdc-school",
+        "title": "Cognitive accommodations: extra time, reduced workload",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "For cognitive symptoms the CDC suggests providing extra time to work on class assignments and tests, and reducing class assignments and homework to key tasks only.",
+        "allowedUses": [
+          "cognitive_accommodation",
+          "pacing",
+          "workload_reduction"
+        ],
+        "tags": [
+          "cognitive",
+          "school",
+          "work"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-003",
+        "sourceKey": "cdc-school",
+        "title": "Physical and sensory accommodations: rest breaks and transition time",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "For physical and sensory symptoms the CDC suggests providing rest breaks, allowing extra time to move between classes, and allowing time to visit the school nurse.",
+        "allowedUses": [
+          "rest_opportunity",
+          "environment_modification",
+          "pacing"
+        ],
+        "tags": [
+          "sensory",
+          "physical",
+          "school"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-005",
+        "sourceKey": "cdc-school",
+        "title": "Remove accommodations gradually as the person improves",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "The CDC advises that temporary modifications should be removed slowly as the student improves, with support tailored to their specific symptoms.",
+        "allowedUses": [
+          "gradual_activity",
+          "pacing"
+        ],
+        "tags": [
+          "pacing",
+          "school"
+        ],
+        "lastReviewed": "2026-09-04"
+      }
+    ],
+    "verification": {
+      "grounded": true,
+      "boundaryPassed": true,
+      "unsupportedClaimsRemoved": [],
+      "bannedLanguageRemoved": []
+    },
+    "trace": [
+      {
+        "name": "sanitize",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Sanitized 6 event labels; 0 sensitive token(s) removed.",
+        "itemsIn": 6,
+        "itemsOut": 6
+      },
+      {
+        "name": "safety_check",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Passed danger signs check. 0 restricted activity boundaries locked. Distress triage: normal.",
+        "itemsIn": 6,
+        "itemsOut": 6
+      },
+      {
+        "name": "retrieve_evidence",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 1,
+        "kind": "retrieval",
+        "detail": "Retrieved top 8 verified evidence chunks scored by symptom profile and event demands.",
+        "itemsIn": 24,
+        "itemsOut": 8
+      },
+      {
+        "name": "structure_activities",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 150,
+        "kind": "model",
+        "detail": "Structured loads via deterministic category priors and duration/environment heuristics.",
+        "itemsIn": 6,
+        "itemsOut": 6
+      },
+      {
+        "name": "compose_plan",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 150,
+        "kind": "model",
+        "detail": "Synthesized 0 recommendations via deterministic rules engine.",
+        "itemsIn": 8,
+        "itemsOut": 0
+      },
+      {
+        "name": "verify_plan",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Verification pass: 0 approved, 0 unsupported claim(s) purged, 0 banned phrase(s) blocked.",
+        "itemsIn": 0,
+        "itemsOut": 0
+      },
+      {
+        "name": "build_trace",
+        "status": "ok",
+        "startedAt": 1788524423132,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Assembled 7-stage Glass Box trace with 0 verified recommendations."
+      }
+    ],
+    "modelUsed": "gemini-3.8-flash"
+  }
+}

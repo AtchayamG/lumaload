@@ -1,0 +1,456 @@
+{
+  "fixtureId": "maya-day-5",
+  "computedAt": "2026-09-04T12:20:23.127Z",
+  "modelUsed": "gemini-3.8-flash",
+  "response": {
+    "status": "ok",
+    "safety": {
+      "dangerSignsDetected": false,
+      "dangerSignsSelected": [],
+      "restrictedEventIds": [
+        "maya-ev-8"
+      ],
+      "distressSignpostShown": false
+    },
+    "capacity": {
+      "baseline": 0.74,
+      "pressurePoints": [
+        {
+          "startMinutes": 510,
+          "endMinutes": 760,
+          "severity": "high"
+        },
+        {
+          "startMinutes": 780,
+          "endMinutes": 955,
+          "severity": "high"
+        },
+        {
+          "startMinutes": 990,
+          "endMinutes": 1025,
+          "severity": "high"
+        },
+        {
+          "startMinutes": 1080,
+          "endMinutes": 1135,
+          "severity": "high"
+        }
+      ]
+    },
+    "activityLoads": [
+      {
+        "eventId": "maya-ev-1",
+        "cognitive": 1.8,
+        "sensory": 4.1,
+        "physical": 2.2,
+        "reasonCodes": [
+          "prior_commute_transit",
+          "duration_short",
+          "env_travel_boost"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-2",
+        "cognitive": 5,
+        "sensory": 3.8,
+        "physical": 1.3,
+        "reasonCodes": [
+          "prior_lecture_class",
+          "duration_extended"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-3",
+        "cognitive": 5,
+        "sensory": 5,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_laptop_work",
+          "duration_extended",
+          "env_screen_boost"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-4",
+        "cognitive": 1,
+        "sensory": 2.8,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_meal",
+          "env_crowded_boost",
+          "env_loud_boost"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-5",
+        "cognitive": 4.7,
+        "sensory": 5,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_video_meeting",
+          "duration_extended",
+          "env_screen_boost"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-6",
+        "cognitive": 5,
+        "sensory": 5,
+        "physical": 0,
+        "reasonCodes": [
+          "prior_laptop_work",
+          "duration_extended",
+          "env_screen_boost"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-7",
+        "cognitive": 1.9,
+        "sensory": 4.7,
+        "physical": 1.9,
+        "reasonCodes": [
+          "prior_errand_shopping",
+          "duration_short",
+          "env_crowded_boost",
+          "env_bright_boost"
+        ],
+        "riskClass": "normal_daily_activity",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      },
+      {
+        "eventId": "maya-ev-8",
+        "cognitive": 3.3,
+        "sensory": 4.3,
+        "physical": 5,
+        "reasonCodes": [
+          "prior_contact_sport",
+          "duration_extended"
+        ],
+        "riskClass": "restricted",
+        "confidence": 0.95,
+        "source": "deterministic_prior"
+      }
+    ],
+    "recommendations": [
+      {
+        "id": "rec-det-screen-maya-ev-2",
+        "action": "Split the 90-minute biology lecture with a 15-minute screen-free break",
+        "rationale": "Unbroken cognitive and screen demand can intensify fogginess and headache. Adding structured pauses maintains task tolerance.",
+        "targetEventIds": [
+          "maya-ev-2"
+        ],
+        "demandReduced": [
+          "cognitive",
+          "sensory"
+        ],
+        "confidence": "high",
+        "evidenceIds": [
+          "cdc-recovery-003"
+        ],
+        "whatWeInferred": "Extended continuous screen exposure without pauses compounds sensory fatigue.",
+        "whatWeDoNotKnow": "Whether institutional assignment deadlines permit flexible interval completion."
+      },
+      {
+        "id": "rec-det-env-maya-ev-4",
+        "action": "Relocate lunch in busy campus cafeteria to a calmer, quieter setting or step out for quiet breaks",
+        "rationale": "Loud, visually intense, or crowded spaces quickly deplete sensory tolerance when recovering from concussion.",
+        "targetEventIds": [
+          "maya-ev-4"
+        ],
+        "demandReduced": [
+          "sensory"
+        ],
+        "confidence": "high",
+        "evidenceIds": [
+          "cdc-recovery-003"
+        ],
+        "whatWeInferred": "Concurrent auditory and visual stimuli aggravate light and noise sensitivity.",
+        "whatWeDoNotKnow": "Whether a private or quiet alternative space is readily accessible on-site."
+      },
+      {
+        "id": "rec-det-capacity-pace",
+        "action": "Insert a 20-minute quiet decompression window before the afternoon demand stack",
+        "rationale": "Today's capacity baseline is reduced due to sleep and mood symptoms. Proactive pacing prevents late-day symptom flare-ups.",
+        "targetEventIds": [
+          "maya-ev-4"
+        ],
+        "demandReduced": [
+          "capacity",
+          "cognitive"
+        ],
+        "confidence": "moderate",
+        "evidenceIds": [
+          "cdc-recovery-003"
+        ],
+        "whatWeInferred": "Multiple consecutive commitments without recovery buffers lead to demand outpacing baseline capacity.",
+        "whatWeDoNotKnow": "Exact personal fatigue thresholds across different study tasks."
+      },
+      {
+        "id": "rec-det-emotional-support",
+        "action": "Maintain low-stress social check-ins with friends or trusted colleagues",
+        "rationale": "Concussion recovery is emotionally taxing. Staying connected in low-demand ways helps reduce anxiety and mood strain.",
+        "targetEventIds": [
+          "maya-ev-4"
+        ],
+        "demandReduced": [
+          "capacity"
+        ],
+        "confidence": "moderate",
+        "evidenceIds": [
+          "cdc-school-001"
+        ],
+        "whatWeInferred": "Concussion symptoms often include irritability and nervousness that benefit from supportive social pacing.",
+        "whatWeDoNotKnow": "Personal comfort level discussing recovery needs with peers."
+      }
+    ],
+    "evidence": [
+      {
+        "id": "cdc-recovery-003",
+        "sourceKey": "cdc-recovery",
+        "title": "Sleep hygiene: limit screens and loud sound before bed",
+        "organization": "CDC",
+        "url": "https://www.cdc.gov/traumatic-brain-injury/response/index.html",
+        "claim": "The CDC suggests limiting screen time and loud music before bed, sleeping in a dark room, and keeping a fixed bedtime and wake-up schedule while recovering.",
+        "allowedUses": [
+          "sleep_hygiene",
+          "screen_breaks",
+          "environment_modification"
+        ],
+        "tags": [
+          "capacity",
+          "sleep",
+          "sensory"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "concussion-alliance-001",
+        "sourceKey": "concussion-alliance",
+        "title": "Do not cocoon in a dark room; relative rest instead",
+        "organization": "Concussion Alliance",
+        "url": "https://www.concussionalliance.org/recovery-guide",
+        "claim": "Concussion Alliance advises against lying in a darkened room resting for extended periods during the day, even in the first 24 to 48 hours, recommending relative rest that includes activities of daily living.",
+        "allowedUses": [
+          "avoid_prolonged_rest",
+          "gradual_activity"
+        ],
+        "tags": [
+          "pacing",
+          "sensory",
+          "capacity"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-001",
+        "sourceKey": "cdc-school",
+        "title": "Early return to school can shorten recovery and reduce mental health symptoms",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "The CDC states that most children can return to school within one to two days of a concussion even while experiencing symptoms, and that early return can shorten recovery and reduce the likelihood of mental health symptoms.",
+        "allowedUses": [
+          "gradual_activity",
+          "avoid_prolonged_rest",
+          "emotional_support",
+          "social_connection"
+        ],
+        "tags": [
+          "cognitive",
+          "capacity",
+          "school"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "concussion-alliance-003",
+        "sourceKey": "concussion-alliance",
+        "title": "Limiting screen time in the first two days is associated with faster recovery",
+        "organization": "Concussion Alliance",
+        "url": "https://www.concussionalliance.org/recovery-guide",
+        "claim": "Concussion Alliance reports research in which limiting screen use to roughly 65 minutes per day for the first two days was associated with substantially faster recovery, with gradual symptom-tolerant resumption after 48 hours.",
+        "allowedUses": [
+          "screen_breaks",
+          "workload_reduction",
+          "pacing"
+        ],
+        "tags": [
+          "sensory",
+          "cognitive",
+          "screen"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-003",
+        "sourceKey": "cdc-school",
+        "title": "Physical and sensory accommodations: rest breaks and transition time",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "For physical and sensory symptoms the CDC suggests providing rest breaks, allowing extra time to move between classes, and allowing time to visit the school nurse.",
+        "allowedUses": [
+          "rest_opportunity",
+          "environment_modification",
+          "pacing"
+        ],
+        "tags": [
+          "sensory",
+          "physical",
+          "school"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-school-004",
+        "sourceKey": "cdc-school",
+        "title": "Emotional support: someone to talk to, and staying connected",
+        "organization": "CDC HEADS UP",
+        "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html",
+        "claim": "The CDC suggests developing a plan for who a student can talk to if they feel overwhelmed, and encouraging them to stay connected to friends during recovery.",
+        "allowedUses": [
+          "emotional_support",
+          "social_connection"
+        ],
+        "tags": [
+          "capacity",
+          "mood",
+          "anxiety",
+          "school"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "cdc-symptoms-005",
+        "sourceKey": "cdc-symptoms",
+        "title": "Fatigue and low energy are recognised concussion symptoms",
+        "organization": "CDC",
+        "url": "https://www.cdc.gov/traumatic-brain-injury/signs-symptoms/index.html",
+        "claim": "The CDC lists feeling tired and having no energy as physical symptoms of mild TBI and concussion.",
+        "allowedUses": [
+          "pacing",
+          "capacity_awareness",
+          "rest_opportunity"
+        ],
+        "tags": [
+          "capacity",
+          "physical",
+          "fatigue"
+        ],
+        "lastReviewed": "2026-09-04"
+      },
+      {
+        "id": "amsterdam-2023-002",
+        "sourceKey": "amsterdam-2023",
+        "title": "Return to learn precedes return to sport, under clinician oversight",
+        "organization": "British Journal of Sports Medicine",
+        "url": "https://bjsm.bmj.com/content/57/11/695",
+        "claim": "The 6th International Consensus Statement on Concussion in Sport describes return to learn as preceding full return to sport, with clinician oversight of progression.",
+        "allowedUses": [
+          "clinician_clearance_required",
+          "gradual_activity"
+        ],
+        "tags": [
+          "safety",
+          "school",
+          "restricted"
+        ],
+        "lastReviewed": "2026-09-04"
+      }
+    ],
+    "verification": {
+      "grounded": true,
+      "boundaryPassed": true,
+      "unsupportedClaimsRemoved": [],
+      "bannedLanguageRemoved": []
+    },
+    "trace": [
+      {
+        "name": "sanitize",
+        "status": "ok",
+        "startedAt": 1788524423129,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Sanitized 8 event labels; 0 sensitive token(s) removed.",
+        "itemsIn": 8,
+        "itemsOut": 8
+      },
+      {
+        "name": "safety_check",
+        "status": "ok",
+        "startedAt": 1788524423129,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Passed danger signs check. 1 restricted activity boundaries locked. Distress triage: normal.",
+        "itemsIn": 8,
+        "itemsOut": 7
+      },
+      {
+        "name": "retrieve_evidence",
+        "status": "ok",
+        "startedAt": 1788524423130,
+        "durationMs": 1,
+        "kind": "retrieval",
+        "detail": "Retrieved top 8 verified evidence chunks scored by symptom profile and event demands.",
+        "itemsIn": 24,
+        "itemsOut": 8
+      },
+      {
+        "name": "structure_activities",
+        "status": "ok",
+        "startedAt": 1788524423130,
+        "durationMs": 150,
+        "kind": "model",
+        "detail": "Structured loads via deterministic category priors and duration/environment heuristics.",
+        "itemsIn": 8,
+        "itemsOut": 8
+      },
+      {
+        "name": "compose_plan",
+        "status": "ok",
+        "startedAt": 1788524423130,
+        "durationMs": 150,
+        "kind": "model",
+        "detail": "Synthesized 4 recommendations via deterministic rules engine.",
+        "itemsIn": 8,
+        "itemsOut": 4
+      },
+      {
+        "name": "verify_plan",
+        "status": "ok",
+        "startedAt": 1788524423131,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Verification pass: 4 approved, 0 unsupported claim(s) purged, 0 banned phrase(s) blocked.",
+        "itemsIn": 4,
+        "itemsOut": 4
+      },
+      {
+        "name": "build_trace",
+        "status": "ok",
+        "startedAt": 1788524423131,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Assembled 7-stage Glass Box trace with 4 verified recommendations."
+      }
+    ],
+    "modelUsed": "gemini-3.8-flash"
+  }
+}

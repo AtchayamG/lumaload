@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DaySubmissionSchema } from "@/lib/contracts/day";
 import { runAnalysisPipeline } from "@/lib/pipeline/orchestrator";
+import { findMatchingPrecomputed } from "@/lib/pipeline/precomputed";
 
 export const maxDuration = 60;
 
@@ -17,6 +18,13 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+    }
+
+    const forceLive = body.forceLive === true;
+    const precomputed = findMatchingPrecomputed(parseResult.data, forceLive);
+
+    if (precomputed) {
+      return NextResponse.json(precomputed, { status: 200 });
     }
 
     const analysis = await runAnalysisPipeline(parseResult.data);

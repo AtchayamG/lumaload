@@ -76,7 +76,10 @@ export async function GET() {
 
   // If primary model failed, test the cascade models
   const cascadeCandidates = [
+    "gemini-3.5-flash",
     "gemini-2.5-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-2.5-flash-lite",
   ];
 
   const cascadeResults: ModelTestResult[] = [];

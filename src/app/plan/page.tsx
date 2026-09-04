@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useMemo } from "react";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSessionStore } from "@/lib/state/session";
 import { getAllEvidence } from "@/lib/evidence/registry";
 import { classifyActivityRisk } from "@/lib/safety/restrictedActivities";
+import { ModelDisclosure } from "@/components/trace/ModelDisclosure";
 import { RecommendationCard } from "@/components/plan/RecommendationCard";
 import { BeforeAfter } from "@/components/plan/BeforeAfter";
 import { DistressSignpost } from "@/components/safety/DistressSignpost";
@@ -13,18 +14,68 @@ import { ClinicianBoundary } from "@/components/safety/ClinicianBoundary";
 import { EmergencyStop } from "@/components/safety/EmergencyStop";
 import { LowStimulusToggle } from "@/components/ui/LowStimulusToggle";
 import { Button } from "@/components/ui/Button";
+import mayaPrecomputed from "@/data/precomputed/maya-day-5.json";
+import { AnalysisResponse } from "@/lib/contracts/plan";
+import { TraceStage } from "@/lib/contracts/trace";
 
 export default function PlanPage() {
   const router = useRouter();
   const {
     events,
     symptoms,
+    context,
     analysisResult,
     dangerSignsSelected,
     setDangerSigns,
+    setAnalysisResult,
+    loadPersona,
   } = useSessionStore();
 
+  const [isRerunning, setIsRerunning] = React.useState(false);
   const allEvidence = useMemo(() => getAllEvidence(), []);
+
+  const handleLoadMayaDemo = () => {
+    loadPersona("maya-day-5");
+    const demoTrace: TraceStage[] = [
+      {
+        name: "served_from_precomputed",
+        status: "ok",
+        startedAt: Date.now() - 2,
+        durationMs: 2,
+        kind: "retrieval",
+        detail: "Demo day analysed with gemini-3.8-flash on 4 Sep 2026. Re-run live to call the model now.",
+      },
+      ...(mayaPrecomputed.response.trace as TraceStage[]),
+    ];
+    setAnalysisResult({
+      ...(mayaPrecomputed.response as AnalysisResponse),
+      trace: demoTrace,
+    });
+  };
+
+  const handleRerunLive = async () => {
+    setIsRerunning(true);
+    try {
+      const res = await fetch("/api/analyze-day", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          symptoms,
+          context,
+          events,
+          forceLive: true,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAnalysisResult(data);
+      }
+    } catch (err) {
+      console.error("Failed to rerun live:", err);
+    } finally {
+      setIsRerunning(false);
+    }
+  };
 
   const hasEmergency =
     dangerSignsSelected.length > 0 || analysisResult?.status === "emergency_halt";
@@ -54,7 +105,7 @@ export default function PlanPage() {
     );
   }
 
-  // If user navigates directly to /plan without running analysis, prompt them to run it
+  // Cold visit state: When navigated directly to /plan without session state
   if (!analysisResult) {
     return (
       <main
@@ -63,30 +114,175 @@ export default function PlanPage() {
           backgroundColor: "var(--canvas)",
           color: "var(--ink)",
           padding: "var(--space-12) var(--space-4)",
-          textAlign: "center",
         }}
       >
         <div
           style={{
-            maxWidth: "540px",
+            maxWidth: "680px",
             margin: "0 auto",
             backgroundColor: "var(--surface)",
             border: "1px solid var(--hairline-strong)",
             borderRadius: "var(--radius-md)",
             padding: "var(--space-8)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "var(--space-3)" }}>
-            No Analysis Generated Yet
-          </h2>
-          <p style={{ color: "var(--muted)", marginBottom: "var(--space-6)", lineHeight: 1.5 }}>
-            To view a tailored recovery plan, check in and click &quot;Analyze My Day&quot; on the Recovery Load Canvas.
+          <div
+            style={{
+              display: "inline-block",
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              padding: "2px 8px",
+              backgroundColor: "rgba(30, 108, 115, 0.12)",
+              color: "var(--axis-cognitive)",
+              border: "1px solid rgba(30, 108, 115, 0.3)",
+              borderRadius: "var(--radius-sm)",
+              marginBottom: "var(--space-3)",
+            }}
+          >
+            Screen S4 · Recovery Plan Overview
+          </div>
+          <h1
+            style={{
+              fontSize: "1.75rem",
+              fontWeight: 800,
+              marginBottom: "var(--space-2)",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Evidence-Grounded Recovery Plan
+          </h1>
+          <p
+            style={{
+              color: "var(--muted)",
+              marginBottom: "var(--space-6)",
+              lineHeight: 1.6,
+              fontSize: "1rem",
+            }}
+          >
+            The Recovery Plan translates multidimensional cognitive, sensory, and physical demands into scheduled micro-breaks, pacing modifications, and safety boundaries to prevent symptom spikes.
           </p>
-          <Link href="/canvas" style={{ textDecoration: "none" }}>
-            <Button variant="primary" size="lg">
-              Go to Recovery Canvas →
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "var(--space-3)",
+              marginBottom: "var(--space-8)",
+            }}
+          >
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleLoadMayaDemo}
+              style={{ flex: "1 1 240px" }}
+            >
+              ⚡ Load Maya&apos;s Day 5 Plan (Instant Demo)
             </Button>
-          </Link>
+            <Link href="/canvas" style={{ textDecoration: "none", flex: "1 1 200px" }}>
+              <Button variant="secondary" size="lg" style={{ width: "100%" }}>
+                Map Your Day on Canvas →
+              </Button>
+            </Link>
+          </div>
+
+          <div
+            style={{
+              borderTop: "1px solid var(--hairline)",
+              paddingTop: "var(--space-6)",
+              display: "grid",
+              gap: "var(--space-4)",
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "0.8125rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                color: "var(--muted)",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              What this plan provides
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "var(--space-3)",
+              }}
+            >
+              <div
+                style={{
+                  padding: "var(--space-3)",
+                  backgroundColor: "var(--canvas)",
+                  borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--hairline)",
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "0.875rem",
+                    color: "var(--axis-cognitive)",
+                    marginBottom: "4px",
+                  }}
+                >
+                  🛡️ Clinician Boundaries
+                </div>
+                <div style={{ fontSize: "0.8125rem", color: "var(--muted)", lineHeight: 1.4 }}>
+                  Strict guardrails locking high-risk activities per Consensus on Concussion guidelines.
+                </div>
+              </div>
+              <div
+                style={{
+                  padding: "var(--space-3)",
+                  backgroundColor: "var(--canvas)",
+                  borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--hairline)",
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "0.875rem",
+                    color: "var(--axis-sensory)",
+                    marginBottom: "4px",
+                  }}
+                >
+                  ⏱️ Micro-Break Pacing
+                </div>
+                <div style={{ fontSize: "0.8125rem", color: "var(--muted)", lineHeight: 1.4 }}>
+                  Calculated cognitive resets inserted before sensory & cognitive breakthrough thresholds.
+                </div>
+              </div>
+              <div
+                style={{
+                  padding: "var(--space-3)",
+                  backgroundColor: "var(--canvas)",
+                  borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--hairline)",
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "0.875rem",
+                    color: "var(--axis-physical)",
+                    marginBottom: "4px",
+                  }}
+                >
+                  📚 Evidence Registry
+                </div>
+                <div style={{ fontSize: "0.8125rem", color: "var(--muted)", lineHeight: 1.4 }}>
+                  Every recommendation is grounded in peer-reviewed clinical citations. Zero hallucinated claims.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     );
@@ -94,6 +290,8 @@ export default function PlanPage() {
 
   const recommendations = analysisResult.recommendations;
   const isDegraded = analysisResult.status === "degraded";
+  const isPrecomputed =
+    analysisResult.trace?.some((t) => t.name === "served_from_precomputed") ?? false;
   const restrictedEvents = events.filter(
     (e) => classifyActivityRisk(e.category, e.label) === "restricted"
   );
@@ -184,26 +382,6 @@ export default function PlanPage() {
       >
         {/* Title & Engine Disclosure */}
         <div style={{ marginBottom: "var(--space-6)" }}>
-          <div
-            style={{
-              display: "inline-block",
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              padding: "2px 8px",
-              backgroundColor: isDegraded ? "rgba(196, 123, 72, 0.12)" : "rgba(30, 108, 115, 0.12)",
-              color: isDegraded ? "var(--axis-sensory)" : "var(--axis-cognitive)",
-              border: `1px solid ${isDegraded ? "rgba(196, 123, 72, 0.3)" : "rgba(30, 108, 115, 0.3)"}`,
-              borderRadius: "var(--radius-sm)",
-              marginBottom: "var(--space-2)",
-            }}
-          >
-            {isDegraded
-              ? "Deterministic Rules Engine · Zero Hallucination Mode"
-              : `Synthesized with ${analysisResult.modelUsed || "Gemini"} · Verified Grounded`}
-          </div>
-
           <h1
             style={{
               fontSize: "2rem",
@@ -219,6 +397,17 @@ export default function PlanPage() {
           <p style={{ margin: 0, fontSize: "1.0625rem", color: "var(--muted)", lineHeight: 1.6 }}>
             Evidence-grounded pacing recommendations designed to distribute demand below your Capacity Baseline floor without enforcing total isolation.
           </p>
+        </div>
+
+        {/* Model Disclosure Card */}
+        <div style={{ marginBottom: "var(--space-6)" }}>
+          <ModelDisclosure
+            modelUsed={analysisResult.modelUsed}
+            status={analysisResult.status}
+            isPrecomputed={isPrecomputed}
+            onRerunLive={handleRerunLive}
+            rerunning={isRerunning}
+          />
         </div>
 
         {/* Distress Signpost when triggered */}

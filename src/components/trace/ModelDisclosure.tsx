@@ -1,16 +1,23 @@
 ﻿"use client";
 
 import React from "react";
+import { Button } from "@/components/ui/Button";
 
 export interface ModelDisclosureProps {
   modelUsed: string | null;
   status: "ok" | "emergency_halt" | "degraded";
+  isPrecomputed?: boolean;
+  onRerunLive?: () => void;
+  rerunning?: boolean;
   className?: string;
 }
 
 export const ModelDisclosure: React.FC<ModelDisclosureProps> = ({
   modelUsed,
   status,
+  isPrecomputed = false,
+  onRerunLive,
+  rerunning = false,
   className = "",
 }) => {
   const isFallback = !modelUsed || status === "degraded";
@@ -37,31 +44,78 @@ export const ModelDisclosure: React.FC<ModelDisclosureProps> = ({
           gap: "var(--space-2)",
         }}
       >
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.75rem",
-            fontWeight: 700,
-            textTransform: "uppercase",
-            padding: "2px 8px",
-            backgroundColor: isFallback ? "rgba(196, 123, 72, 0.12)" : "rgba(30, 108, 115, 0.12)",
-            color: isFallback ? "var(--axis-sensory)" : "var(--axis-cognitive)",
-            border: `1px solid ${isFallback ? "rgba(196, 123, 72, 0.3)" : "rgba(30, 108, 115, 0.3)"}`,
-            borderRadius: "var(--radius-sm)",
-          }}
-        >
-          Model & Delegation Disclosure
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", flexWrap: "wrap" }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              padding: "2px 8px",
+              backgroundColor: isFallback
+                ? "rgba(196, 123, 72, 0.12)"
+                : isPrecomputed
+                ? "rgba(124, 107, 138, 0.12)"
+                : "rgba(30, 108, 115, 0.12)",
+              color: isFallback
+                ? "var(--axis-sensory)"
+                : isPrecomputed
+                ? "var(--axis-capacity)"
+                : "var(--axis-cognitive)",
+              border: `1px solid ${
+                isFallback
+                  ? "rgba(196, 123, 72, 0.3)"
+                  : isPrecomputed
+                  ? "rgba(124, 107, 138, 0.3)"
+                  : "rgba(30, 108, 115, 0.3)"
+              }`,
+              borderRadius: "var(--radius-sm)",
+            }}
+          >
+            Model & Delegation Disclosure
+          </span>
 
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.8125rem",
-            color: "var(--muted)",
-          }}
-        >
-          Engine: {isFallback ? "Deterministic Rules Engine" : modelUsed}
-        </span>
+          {isPrecomputed && (
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                color: "var(--axis-cognitive)",
+                padding: "2px 8px",
+                backgroundColor: "var(--canvas)",
+                border: "1px solid var(--hairline)",
+                borderRadius: "var(--radius-sm)",
+              }}
+            >
+              Pre-computed with gemini-3.8-flash · 4 Sep 2026
+            </span>
+          )}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.8125rem",
+              color: "var(--muted)",
+            }}
+          >
+            Engine: {isFallback ? "Deterministic Rules Engine" : modelUsed}
+          </span>
+
+          {isPrecomputed && onRerunLive && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onRerunLive}
+              disabled={rerunning}
+              style={{ minHeight: "44px" }}
+            >
+              {rerunning ? "Calling Model..." : "Re-run live ↻"}
+            </Button>
+          )}
+        </div>
       </div>
 
       <div
@@ -73,11 +127,16 @@ export const ModelDisclosure: React.FC<ModelDisclosureProps> = ({
           fontSize: "0.9375rem",
           fontWeight: 600,
           color: "var(--ink)",
+          lineHeight: 1.5,
         }}
       >
         {isFallback ? (
           <span>
-            Model unavailable or rate-limited — this recovery plan was produced by LumaLoad&apos;s deterministic rules engine using verified activity priors and guideline tags. Zero hallucination guarantee.
+            Model quota exhausted on the free tier. This plan was produced by LumaLoad&apos;s deterministic rules engine. The evidence, safety gates and boundaries below are unaffected — they never depend on a model.
+          </span>
+        ) : isPrecomputed ? (
+          <span>
+            Pre-computed analysis from authentic Gemini 3.8 Flash execution on Maya&apos;s Day 5 profile. You can click &quot;Re-run live&quot; above to force a live execution across the cascade.
           </span>
         ) : (
           <span>

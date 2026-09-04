@@ -5,6 +5,7 @@ import { DayEvent } from "@/lib/contracts/day";
 import { EventBlock } from "./EventBlock";
 import { EventEditor } from "./EventEditor";
 import { Button } from "@/components/ui/Button";
+import { Dialog } from "@/components/ui/Dialog";
 
 export interface DayTimelineProps {
   events: DayEvent[];
@@ -23,16 +24,27 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [editingEvent, setEditingEvent] = useState<DayEvent | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const sortedEvents = [...events].sort((a, b) => a.startMinutes - b.startMinutes);
+  const filteredEvents = [...events]
+    .filter((e) =>
+      searchQuery
+        ? e.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          e.category.toLowerCase().includes(searchQuery.toLowerCase())
+        : true
+    )
+    .sort((a, b) => a.startMinutes - b.startMinutes);
 
   return (
     <div className={`day-timeline ${className}`}>
+      {/* Timeline Controls Header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: "var(--space-3)",
           marginBottom: "var(--space-4)",
         }}
       >
@@ -47,25 +59,57 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           >
             Day Timeline
           </h3>
-          <span style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>
-            {sortedEvents.length} activities scheduled
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.8125rem",
+              color: "var(--muted)",
+            }}
+          >
+            {events.length} activities scheduled
           </span>
         </div>
 
-        {!isAdding && !editingEvent && (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setIsAdding(true)}
-            style={{ minHeight: "44px" }}
-          >
-            + Add Activity
-          </Button>
-        )}
+        <Button
+          id="add-activity-btn"
+          variant="primary"
+          size="sm"
+          onClick={() => setIsAdding(true)}
+          style={{ minHeight: "44px", minWidth: "130px" }}
+        >
+          + Add Activity
+        </Button>
       </div>
 
-      {/* Editor when Adding */}
-      {isAdding && (
+      {/* Filter / Search Bar */}
+      <div style={{ marginBottom: "var(--space-4)" }}>
+        <input
+          id="activity-search-input"
+          type="search"
+          placeholder="Filter activities by name or category..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Filter activities"
+          style={{
+            width: "100%",
+            minHeight: "44px",
+            padding: "0 var(--space-3)",
+            backgroundColor: "var(--surface)",
+            border: "1px solid var(--hairline-strong)",
+            borderRadius: "var(--radius-sm)",
+            color: "var(--ink)",
+            fontSize: "0.875rem",
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
+
+      {/* Modal Dialog for Adding */}
+      <Dialog
+        isOpen={isAdding}
+        onClose={() => setIsAdding(false)}
+        title="Add Scheduled Activity"
+      >
         <EventEditor
           initialEvent={null}
           onSave={(newEvent) => {
@@ -74,23 +118,29 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           }}
           onCancel={() => setIsAdding(false)}
         />
-      )}
+      </Dialog>
 
-      {/* Editor when Editing */}
-      {editingEvent && (
-        <EventEditor
-          initialEvent={editingEvent}
-          onSave={(updated) => {
-            onUpdateEvent(updated.id, updated);
-            setEditingEvent(null);
-          }}
-          onCancel={() => setEditingEvent(null)}
-        />
-      )}
+      {/* Modal Dialog for Editing */}
+      <Dialog
+        isOpen={!!editingEvent}
+        onClose={() => setEditingEvent(null)}
+        title="Edit Activity"
+      >
+        {editingEvent && (
+          <EventEditor
+            initialEvent={editingEvent}
+            onSave={(updated) => {
+              onUpdateEvent(updated.id, updated);
+              setEditingEvent(null);
+            }}
+            onCancel={() => setEditingEvent(null)}
+          />
+        )}
+      </Dialog>
 
       {/* List of Events */}
       <div style={{ display: "grid", gap: "var(--space-3)" }}>
-        {sortedEvents.map((ev) => (
+        {filteredEvents.map((ev) => (
           <EventBlock
             key={ev.id}
             event={ev}
@@ -99,7 +149,7 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
           />
         ))}
 
-        {sortedEvents.length === 0 && (
+        {filteredEvents.length === 0 && (
           <div
             style={{
               padding: "var(--space-6)",
@@ -110,7 +160,9 @@ export const DayTimeline: React.FC<DayTimelineProps> = ({
               color: "var(--muted)",
             }}
           >
-            No events scheduled for this day yet. Click &quot;+ Add Activity&quot; or pick a demo profile.
+            {searchQuery
+              ? `No activities match "${searchQuery}".`
+              : "No activities scheduled for this day yet. Click \"+ Add Activity\" to map your day."}
           </div>
         )}
       </div>

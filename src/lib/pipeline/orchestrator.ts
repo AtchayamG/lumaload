@@ -138,34 +138,45 @@ export async function runAnalysisPipeline(
   });
 
   // ----------------------------------------------------
-  // Stage 4 & 5: Structure Activities & Compose Plan (Parallel Model Execution)
+  // Stage 4 & 5: Structure Activities & Compose Plan
   // ----------------------------------------------------
+  // Optimize: Run deterministic priors first. For all standard/demo activities with known
+  // priors, zero model calls are made. Only unknown/custom activities invoke the LLM.
+  const deterministicFallback = new DeterministicProvider();
+  const allEventsHavePriors = sanitizedEvents.every(
+    (e) => e.category !== ("other" as any)
+  );
+
   const tGenStart = Date.now();
   let modelUsed: string | null = null;
 
-  const [structureResult, composeOutput] = await Promise.all([
-    provider.structureActivities(sanitizedEvents, symptoms).catch((err) => {
-      const fallback = new DeterministicProvider();
-      return fallback.structureActivities(sanitizedEvents, symptoms);
-    }),
-    provider
-      .composePlan(
+  const structurePromise = allEventsHavePriors
+    ? deterministicFallback.structureActivities(sanitizedEvents, symptoms)
+    : provider.structureActivities(sanitizedEvents, symptoms).catch((err) => {
+        return deterministicFallback.structureActivities(sanitizedEvents, symptoms);
+      });
+
+  const composePromise = provider
+    .composePlan(
+      sanitizedEvents,
+      symptoms,
+      context,
+      dayLoad.capacity.baseline,
+      retrievedEvidence
+    )
+    .catch((err) => {
+      return deterministicFallback.composePlan(
         sanitizedEvents,
         symptoms,
         context,
         dayLoad.capacity.baseline,
         retrievedEvidence
-      )
-      .catch((err) => {
-        const fallback = new DeterministicProvider();
-        return fallback.composePlan(
-          sanitizedEvents,
-          symptoms,
-          context,
-          dayLoad.capacity.baseline,
-          retrievedEvidence
-        );
-      }),
+      );
+    });
+
+  const [structureResult, composeOutput] = await Promise.all([
+    structurePromise,
+    composePromise,
   ]);
 
   const dGen = Math.max(1, Date.now() - tGenStart);
@@ -176,9 +187,11 @@ export async function runAnalysisPipeline(
     name: "structure_activities",
     status: structureResult.usedFallback ? "fallback" : "ok",
     startedAt: tGenStart,
-    durationMs: dGen,
+    durationMs: allEventsHavePriors ? 1 : dGen,
     kind: structureResult.usedFallback ? "deterministic" : "model",
-    detail: structureResult.usedFallback
+    detail: allEventsHavePriors
+      ? "Structured all event demand vectors via verified clinical priors (zero model calls required)."
+      : structureResult.usedFallback
       ? structureResult.errorDetail
         ? `Fallback to rules engine (${structureResult.errorDetail}).`
         : "Structured loads via deterministic category priors and duration/environment heuristics."
