@@ -2,8 +2,8 @@
 
 **Target Event:** Hack for Humanity | Summer 2026 (Devpost)  
 **Lead Engineer:** Atchayam G (Solo)  
-**Last Updated:** 2026-09-04 16:18 IST  
-**Current Milestone:** Checkpoint 1 (CP1) Complete — Transitioning to CP2
+**Last Updated:** 2026-09-04 16:24 IST  
+**Current Milestone:** Checkpoint 2 (CP2) Complete — Advancing to CP3
 
 ---
 
@@ -12,8 +12,8 @@
 | Milestone | Window | Target Scope | Status | Verification |
 |---|---|---|---|---|
 | **CP1** | 16:08 – 16:50 IST | Scaffold, tokens, contracts, evidence registry, priors, Maya fixture | **DONE (GREEN)** | 11/11 tests pass; tsc green |
-| **CP2** | 16:50 – 19:00 IST | Safety engine + tests; load/capacity heuristics; ribbon rendering fixture | **IN PROGRESS** | Unit tests + fixture visual test |
-| **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **QUEUED** | Public Vercel URL live |
+| **CP2** | 16:50 – 19:00 IST | Safety engine + tests; load/capacity engine; ribbon rendering fixture | **DONE (GREEN)** | 32/32 tests pass; build green |
+| **CP3** | 19:00 – 21:00 IST | Pipeline, Gemini provider, verifier, `/api/analyze-day`, First Vercel Deploy | **IN PROGRESS** | Public Vercel URL live |
 | **CP4** | 21:00 – 00:30 IST | S2/S4/S5 screens, Why drawer, Glass Box trace, distress signpost, before/after | **QUEUED** | End-to-end integration pass |
 | **CP5** | 00:30 – 02:30 IST | Responsive, a11y, Low Stimulus, error states, Lighthouse | **QUEUED** | Lighthouse score >= 95 |
 | **FREEZE**| 02:30 IST | Feature freeze & regression lock | **QUEUED** | CI test pass & clean staging |
@@ -21,7 +21,29 @@
 
 ---
 
-## Detailed CP1 Status Report
+## Detailed Milestone Status Reports
+
+### CP2 Status Report (Completed)
+- **Deterministic Safety Engine (`src/lib/safety/`):**
+  - `dangerSigns.ts`: 8 CDC danger signs checklist, evaluation, emergency halt logic, calm emergency guidance copy.
+  - `language.ts`: Banned clinical phrase list (`BANNED_PHRASES`), `assertNoBannedLanguage`, `findBannedPhrases`.
+  - `restrictedActivities.ts`: Three-tier risk classifier (`normal_daily_activity | clinician_guided | restricted`).
+  - `boundaries.ts`: Assertion routines preventing AI recommendations from targeting restricted events.
+  - `distress.ts`: Mental health triage (`mood >= 8 || anxiety >= 8 || feelingUnableToCope`).
+- **Load & Capacity Engine (`src/lib/load/`):**
+  - `heuristics.ts`: Duration modifiers (0.7–1.6), environment factor adjustments (+0.4 per factor), and symptom sensitivities.
+  - `capacity.ts`: Capacity Baseline calculation and pressure point detector (continuous >=30m windows over capacity).
+  - `aggregate.ts`: 24-hour continuous timeline load profile generator with 5-minute sampling.
+- **Visual Cartography & Load Ribbon:**
+  - Hand-rolled custom SVG `LoadRibbon` component with smooth cubic Bézier splines for Cognitive, Sensory, Physical demand strands.
+  - `CapacityBaseline` component rendering baseline floor and cross-hatched pressure points.
+  - `RibbonLegend` and accessible `RibbonTextAlternative` table.
+  - S1 Story page (`src/app/page.tsx`) rendering Maya fixture live without backend dependencies.
+- **Verification Results:**
+  - 32/32 tests passing across 5 test suites.
+  - `next build` static export succeeded with 0 errors.
+
+### CP1 Status Report (Completed)
 
 - **Scaffold & Build Setup:**
   - Next.js 15 (App Router), React 19, TypeScript strict mode configured.

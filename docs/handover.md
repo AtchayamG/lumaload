@@ -3,29 +3,35 @@
 **Project:** LumaLoad — Recovery Load OS  
 **Author:** Atchayam G  
 **Autonomous Engineer:** Antigravity / Gemini  
-**Current Milestone:** CP1 (Complete) -> CP2 (Active)  
-**Time:** 2026-09-04 16:18 IST  
+**Current Milestone:** CP2 (Complete) -> CP3 (Active)  
+**Time:** 2026-09-04 16:24 IST  
 
 ---
 
 ## 1. Executive Summary
 
-Checkpoint 1 (CP1) has completed cleanly ahead of schedule. The foundation of LumaLoad is fully operational:
-- Monorepo scaffold with Next.js 15, TypeScript strict mode, Vitest.
-- CSS token system (`tokens.css`) embodying the "Neurological Load Cartography" visual feel.
-- Complete Zod data contracts at all API and model boundaries.
-- Curated evidence registry (`src/data/evidence.json`) validated and locked.
-- Activity demand priors with 17 categories and deterministic risk classifications.
-- Maya synthetic persona fixture (`src/data/demo-days.json`) and contrast fixtures created.
-- 11/11 automated tests passing, 0 TypeScript errors.
+Checkpoint 2 (CP2) has completed cleanly ahead of the 19:00 IST target:
+- Deterministic Safety Engine operational:
+  - CDC 8 danger signs emergency hard-stop logic.
+  - Three-tier activity risk classifier (`normal_daily_activity`, `clinician_guided`, `restricted`).
+  - Clinical boundary enforcement guarding contact sports, driving, and fall-risk activities.
+  - Distress triage and signpost banner rules for emotional support.
+  - Case-insensitive banned clinical phrase assertions.
+- Load & Capacity Engine operational:
+  - Duration scaling (0.7 to 1.6), environment factor modifiers (+0.4 per factor), and symptom sensitivities.
+  - Capacity Baseline formula modeling the mental-health arm.
+  - Pressure point detection identifying sustained demand windows above capacity baseline.
+- Hand-rolled custom SVG Load Ribbon with smooth spline streaming and Capacity Baseline floor rendering Maya's fixture on S1 Story (`/`).
+- Accessible text alternative table and Low Stimulus mode toggle integrated.
+- 32/32 tests passing across 5 test suites.
+- Next.js production build (`next build`) verified green.
 
 ---
 
 ## 2. Deploy Status
 
-- **Current Environment:** Local development & build verification.
-- **First Public Vercel Deploy Milestone:** Checkpoint 3 (by 21:00 IST target, expected earlier).
-- **Staging / Deploy URL:** Pending CP3 deploy.
+- **Current Environment:** Local development & production build verified.
+- **Milestone CP3 Target:** Public Vercel Deployment with live Gemini 3.8 Flash pipeline and verifier.
 
 ---
 
@@ -34,14 +40,17 @@ Checkpoint 1 (CP1) has completed cleanly ahead of schedule. The foundation of Lu
 ```
  RUN  v3.2.7 D:/Work/Codex/Hackathon Projects/LumaLoad
 
+ ✓ tests/danger-signs.test.ts (12 tests) 4ms
+ ✓ tests/boundaries.test.ts (6 tests) 4ms
  ✓ tests/evidence-registry.test.ts (6 tests) 5ms
  ✓ tests/contracts.test.ts (5 tests) 3ms
+ ✓ tests/capacity.test.ts (3 tests) 6ms
 
- Test Files  2 passed (2)
-      Tests  11 passed (11)
-   Duration  713ms
+ Test Files  5 passed (5)
+      Tests  32 passed (32)
 
  tsc --noEmit: Passed with 0 errors.
+ next build: Successfully generated static pages with 0 errors.
 ```
 
 ---
