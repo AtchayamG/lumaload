@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useMemo } from "react";
 import { TimePointDemand } from "@/lib/load/capacity";
@@ -351,19 +351,39 @@ export const LoadRibbon: React.FC<LoadRibbonProps> = ({
               fillOpacity="0.75"
               style={{ mixBlendMode: "multiply" }}
             />
+            {/* Centerline Halo + High Contrast Stroke */}
+            <path
+              d={phyCenterPath}
+              fill="none"
+              stroke="var(--surface)"
+              strokeWidth="4"
+              opacity="0.8"
+            />
             <path
               d={phyCenterPath}
               fill="none"
               stroke="var(--axis-physical)"
+              strokeWidth="2.2"
+              opacity="1"
+            />
+            {/* High Contrast Label Badge */}
+            <rect
+              x="6"
+              y="156"
+              width="32"
+              height="18"
+              rx="3"
+              fill="var(--surface)"
+              stroke="var(--axis-physical)"
               strokeWidth="1.5"
-              opacity="0.8"
             />
             <text
-              x="12"
+              x="22"
               y="169"
+              textAnchor="middle"
               fontFamily="var(--font-mono)"
               fontSize="9px"
-              fontWeight="700"
+              fontWeight="800"
               fill="var(--axis-physical)"
             >
               PHY
@@ -376,20 +396,40 @@ export const LoadRibbon: React.FC<LoadRibbonProps> = ({
               fillOpacity="0.72"
               style={{ mixBlendMode: "multiply" }}
             />
+            {/* Centerline Halo + High Contrast Stroke */}
+            <path
+              d={senCenterPath}
+              fill="none"
+              stroke="var(--surface)"
+              strokeWidth="4"
+              opacity="0.8"
+            />
             <path
               d={senCenterPath}
               fill="none"
               stroke="var(--axis-sensory)"
+              strokeWidth="2.2"
+              strokeDasharray="3 3"
+              opacity="1"
+            />
+            {/* High Contrast Label Badge */}
+            <rect
+              x="6"
+              y="101"
+              width="32"
+              height="18"
+              rx="3"
+              fill="var(--surface)"
+              stroke="var(--axis-sensory)"
               strokeWidth="1.5"
-              strokeDasharray="2 3"
-              opacity="0.9"
             />
             <text
-              x="12"
+              x="22"
               y="114"
+              textAnchor="middle"
               fontFamily="var(--font-mono)"
               fontSize="9px"
-              fontWeight="700"
+              fontWeight="800"
               fill="var(--axis-sensory)"
             >
               SEN
@@ -402,20 +442,40 @@ export const LoadRibbon: React.FC<LoadRibbonProps> = ({
               fillOpacity="0.7"
               style={{ mixBlendMode: "multiply" }}
             />
+            {/* Centerline Halo + High Contrast Stroke */}
+            <path
+              d={cogCenterPath}
+              fill="none"
+              stroke="var(--surface)"
+              strokeWidth="4"
+              opacity="0.8"
+            />
             <path
               d={cogCenterPath}
               fill="none"
               stroke="var(--axis-cognitive)"
+              strokeWidth="2.2"
+              strokeDasharray="7 4"
+              opacity="1"
+            />
+            {/* High Contrast Label Badge */}
+            <rect
+              x="6"
+              y="46"
+              width="32"
+              height="18"
+              rx="3"
+              fill="var(--surface)"
+              stroke="var(--axis-cognitive)"
               strokeWidth="1.5"
-              strokeDasharray="5 4"
-              opacity="0.9"
             />
             <text
-              x="12"
+              x="22"
               y="59"
+              textAnchor="middle"
               fontFamily="var(--font-mono)"
               fontSize="9px"
-              fontWeight="700"
+              fontWeight="800"
               fill="var(--axis-cognitive)"
             >
               COG
