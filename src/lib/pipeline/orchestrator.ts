@@ -121,75 +121,34 @@ export async function runAnalysisPipeline(
   const dayLoad = aggregateDayLoad(sanitizedEvents, symptoms);
 
   // ----------------------------------------------------
-  // Stage 3 & 4: Structure Activities & Retrieve Evidence (Parallel)
+  // Stage 3: Retrieve Evidence (Deterministic, ~1ms)
   // ----------------------------------------------------
   const t3Start = Date.now();
+  const retrievedEvidence = retrieveRelevantEvidence(sanitizedEvents, symptoms, 8);
+  const d3 = Math.max(1, Date.now() - t3Start);
+  trace.push({
+    name: "retrieve_evidence",
+    status: "ok",
+    startedAt: t3Start,
+    durationMs: d3,
+    kind: "retrieval",
+    detail: `Retrieved top ${retrievedEvidence.length} verified evidence chunks scored by symptom profile and event demands.`,
+    itemsIn: getAllEvidence().length,
+    itemsOut: retrievedEvidence.length,
+  });
+
+  // ----------------------------------------------------
+  // Stage 4 & 5: Structure Activities & Compose Plan (Parallel Model Execution)
+  // ----------------------------------------------------
+  const tGenStart = Date.now();
   let modelUsed: string | null = null;
 
-  const [structureResult, retrievedEvidence] = await Promise.all([
+  const [structureResult, composeOutput] = await Promise.all([
     provider.structureActivities(sanitizedEvents, symptoms).catch((err) => {
       const fallback = new DeterministicProvider();
       return fallback.structureActivities(sanitizedEvents, symptoms);
     }),
-    Promise.resolve().then(() => {
-      const t4Start = Date.now();
-      const docs = retrieveRelevantEvidence(sanitizedEvents, symptoms, 8);
-      const d4 = Math.max(1, Date.now() - t4Start);
-      trace.push({
-        name: "retrieve_evidence",
-        status: "ok",
-        startedAt: t4Start,
-        durationMs: d4,
-        kind: "retrieval",
-        detail: `Retrieved top ${docs.length} verified evidence chunks scored by symptom profile and event demands.`,
-        itemsIn: getAllEvidence().length,
-        itemsOut: docs.length,
-      });
-      return docs;
-    }),
-  ]);
-
-  const pipelineStart = t1Start;
-  const PIPELINE_BUDGET_MS = 18000;
-
-  const d3 = Math.max(1, Date.now() - t3Start);
-  modelUsed = structureResult.modelUsed;
-
-  trace.push({
-    name: "structure_activities",
-    status: structureResult.usedFallback ? "fallback" : "ok",
-    startedAt: t3Start,
-    durationMs: d3,
-    kind: structureResult.usedFallback ? "deterministic" : "model",
-    detail: structureResult.usedFallback
-      ? structureResult.errorDetail
-        ? `Fallback to rules engine (${structureResult.errorDetail}).`
-        : "Structured loads via deterministic category priors and duration/environment heuristics."
-      : `Classified ${structureResult.activityLoads.length} event demand vectors via ${structureResult.modelUsed}.`,
-    itemsIn: sanitizedEvents.length,
-    itemsOut: structureResult.activityLoads.length,
-  });
-
-  // ----------------------------------------------------
-  // Stage 5: Compose Plan (Model with Deterministic Fallback)
-  // ----------------------------------------------------
-  const t5Start = Date.now();
-  const timeRemaining = PIPELINE_BUDGET_MS - (Date.now() - pipelineStart);
-  
-  let composeOutput;
-  if (timeRemaining < 4000) {
-    // Budget constrained, fall back to rules engine immediately
-    const fallback = new DeterministicProvider();
-    composeOutput = await fallback.composePlan(
-      sanitizedEvents,
-      symptoms,
-      context,
-      dayLoad.capacity.baseline,
-      retrievedEvidence
-    );
-    composeOutput.errorDetail = "Pipeline budget expired (running fast deterministic fallback)";
-  } else {
-    composeOutput = await provider
+    provider
       .composePlan(
         sanitizedEvents,
         symptoms,
@@ -206,19 +165,33 @@ export async function runAnalysisPipeline(
           dayLoad.capacity.baseline,
           retrievedEvidence
         );
-      });
-  }
+      }),
+  ]);
 
-  if (composeOutput.modelUsed) {
-    modelUsed = composeOutput.modelUsed;
-  }
+  const dGen = Math.max(1, Date.now() - tGenStart);
+  if (structureResult.modelUsed) modelUsed = structureResult.modelUsed;
+  if (composeOutput.modelUsed) modelUsed = composeOutput.modelUsed;
 
-  const d5 = Math.max(1, Date.now() - t5Start);
+  trace.push({
+    name: "structure_activities",
+    status: structureResult.usedFallback ? "fallback" : "ok",
+    startedAt: tGenStart,
+    durationMs: dGen,
+    kind: structureResult.usedFallback ? "deterministic" : "model",
+    detail: structureResult.usedFallback
+      ? structureResult.errorDetail
+        ? `Fallback to rules engine (${structureResult.errorDetail}).`
+        : "Structured loads via deterministic category priors and duration/environment heuristics."
+      : `Classified ${structureResult.activityLoads.length} event demand vectors via ${structureResult.modelUsed}.`,
+    itemsIn: sanitizedEvents.length,
+    itemsOut: structureResult.activityLoads.length,
+  });
+
   trace.push({
     name: "compose_plan",
     status: composeOutput.usedFallback ? "fallback" : "ok",
-    startedAt: t5Start,
-    durationMs: d5,
+    startedAt: tGenStart,
+    durationMs: dGen,
     kind: composeOutput.usedFallback ? "deterministic" : "model",
     detail: composeOutput.usedFallback
       ? composeOutput.errorDetail
