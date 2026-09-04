@@ -32,21 +32,7 @@ export default function TracePage() {
 
   const handleLoadMayaDemo = () => {
     loadPersona("maya-day-5");
-    const demoTrace: TraceStage[] = [
-      {
-        name: "served_from_precomputed",
-        status: "ok",
-        startedAt: Date.now() - 2,
-        durationMs: 2,
-        kind: "retrieval",
-        detail: "Demo day analysed with gemini-3.8-flash on 4 Sep 2026. Re-run live to call the model now.",
-      },
-      ...(mayaPrecomputed.response.trace as TraceStage[]),
-    ];
-    setAnalysisResult({
-      ...(mayaPrecomputed.response as AnalysisResponse),
-      trace: demoTrace,
-    });
+    setAnalysisResult(mayaPrecomputed.response as AnalysisResponse);
   };
 
   const handleRerunLive = async () => {
@@ -433,18 +419,46 @@ export default function TracePage() {
                 color: "var(--muted)",
               }}
             >
-              {trace.length} stages recorded
+              {trace.filter((s) => s.name !== "served_from_precomputed").length} stages recorded
             </span>
           </div>
 
+          {trace.find((s) => s.name === "served_from_precomputed") && (
+            <div
+              style={{
+                padding: "var(--space-3) var(--space-4)",
+                backgroundColor: "var(--canvas)",
+                border: "1px dashed var(--hairline-strong)",
+                borderRadius: "var(--radius-sm)",
+                marginBottom: "var(--space-4)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "var(--space-2)",
+                fontSize: "0.8125rem",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              <span style={{ fontWeight: 700, color: "var(--axis-cognitive)" }}>
+                ⚡ Precomputed Cache Hit ({trace.find((s) => s.name === "served_from_precomputed")?.durationMs}ms)
+              </span>
+              <span style={{ color: "var(--muted)" }}>
+                {trace.find((s) => s.name === "served_from_precomputed")?.detail}
+              </span>
+            </div>
+          )}
+
           <div style={{ display: "grid", gap: "var(--space-3)" }}>
-            {trace.map((stage, idx) => (
-              <TraceStageItem
-                key={stage.name + idx}
-                stage={stage}
-                stepNumber={idx + 1}
-              />
-            ))}
+            {trace
+              .filter((s) => s.name !== "served_from_precomputed")
+              .map((stage, idx) => (
+                <TraceStageItem
+                  key={stage.name + idx}
+                  stage={stage}
+                  stepNumber={idx + 1}
+                />
+              ))}
           </div>
         </section>
 

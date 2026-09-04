@@ -95,8 +95,7 @@ LumaLoad operates under a strict three-tier deterministic safety architecture de
 - **PII Sanitisation:** Deterministic regex and pattern scrubbers strip patient names, email addresses, phone numbers, external URLs, and long digit sequences before any payload reaches an AI stage.
 - **Zero Server-Side Health Persistence:** All patient symptoms, context, and schedules are stored exclusively in client-side memory and local session storage (`sessionStorage`/`localStorage`). No patient health information (PHI) is ever saved to a database, external log, or remote analytics server.
 - **Honest Degraded Labelling:** If Gemini quota is exhausted or rate limits are reached, the system immediately cascades to LumaLoad's deterministic offline rules engine in ~150ms, clearly surfacing the verbatim disclosure:
-  > *"Model quota exhausted on the free tier. This plan was produced by LumaLoad's deterministic rules engine. The evidence, safety gates and boundaries below are unaffected — they never depend on a model."*
-- **Pre-computed Demo Disclosure:** Synthetic clinical personas (Maya Day 5, A Quieter Tuesday, Danger Sign Demo) are precomputed with `gemini-3.8-flash` and served from cache with transparent badges and a "Re-run live" trigger button for instant auditing without consuming judge quota.
+- **Pre-computed Demo Disclosure:** Synthetic clinical personas (Maya Day 5, A Quieter Tuesday, Danger Sign Demo) are precomputed with LumaLoad's deterministic rules engine during the build window when free-tier model quota was exhausted. They are served with transparent badges and a "Re-run live" trigger button so judges can execute live model calls across the Gemini cascade without consuming quota on initial load.
 
 ---
 

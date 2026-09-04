@@ -1,6 +1,6 @@
 {
   "fixtureId": "danger-sign-demo",
-  "computedAt": "2026-09-04T12:20:23.127Z",
+  "computedAt": "2026-09-04T15:39:50.846Z",
   "modelUsed": null,
   "response": {
     "status": "emergency_halt",
@@ -53,7 +53,7 @@
       {
         "name": "sanitize",
         "status": "ok",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "Sanitized 1 event labels; 0 sensitive token(s) removed.",
@@ -63,7 +63,7 @@
       {
         "name": "safety_check",
         "status": "halted",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "EMERGENCY HARD STOP: 2 CDC danger sign(s) detected. Pipeline halted immediately.",
@@ -73,15 +73,15 @@
       {
         "name": "structure_activities",
         "status": "skipped",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 0,
-        "kind": "model",
+        "kind": "deterministic",
         "detail": "SKIPPED — blocked by safety gate (CDC danger signs active)."
       },
       {
         "name": "retrieve_evidence",
         "status": "skipped",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 0,
         "kind": "retrieval",
         "detail": "SKIPPED — blocked by safety gate (CDC danger signs active)."
@@ -89,15 +89,15 @@
       {
         "name": "compose_plan",
         "status": "skipped",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 0,
-        "kind": "model",
+        "kind": "deterministic",
         "detail": "SKIPPED — blocked by safety gate (CDC danger signs active)."
       },
       {
         "name": "verify_plan",
         "status": "skipped",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 0,
         "kind": "deterministic",
         "detail": "SKIPPED — blocked by safety gate (CDC danger signs active)."
@@ -105,7 +105,7 @@
       {
         "name": "build_trace",
         "status": "skipped",
-        "startedAt": 1788524423133,
+        "startedAt": 1788536420874,
         "durationMs": 0,
         "kind": "deterministic",
         "detail": "SKIPPED — blocked by safety gate (CDC danger signs active)."

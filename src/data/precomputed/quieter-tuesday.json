@@ -1,9 +1,9 @@
 {
   "fixtureId": "quieter-tuesday",
-  "computedAt": "2026-09-04T12:20:23.127Z",
-  "modelUsed": "gemini-3.8-flash",
+  "computedAt": "2026-09-04T15:39:50.846Z",
+  "modelUsed": null,
   "response": {
-    "status": "ok",
+    "status": "degraded",
     "safety": {
       "dangerSignsDetected": false,
       "dangerSignsSelected": [],
@@ -103,7 +103,44 @@
         "source": "deterministic_prior"
       }
     ],
-    "recommendations": [],
+    "recommendations": [
+      {
+        "id": "rec-det-gradual-quiet-ev-1",
+        "action": "Continue light physical activity like your 30-minute gentle neighborhood walk within symptom-free limits",
+        "rationale": "Evidence confirms easing back into regular light physical activity promotes recovery compared to prolonged strict isolation.",
+        "targetEventIds": [
+          "quiet-ev-1"
+        ],
+        "demandReduced": [
+          "physical",
+          "capacity"
+        ],
+        "confidence": "high",
+        "evidenceIds": [
+          "cdc-recovery-002"
+        ],
+        "whatWeInferred": "Sub-symptom aerobic movement improves recovery when kept within comfortable limits.",
+        "whatWeDoNotKnow": "Personal exertion threshold where symptoms might re-emerge."
+      },
+      {
+        "id": "rec-det-read-quiet-ev-2",
+        "action": "Take a 5-minute visual break during the 45-minute print textbook reading",
+        "rationale": "Sustained near-vision tasks and text processing can induce subtle visual fatigue even in quiet environments.",
+        "targetEventIds": [
+          "quiet-ev-2"
+        ],
+        "demandReduced": [
+          "cognitive",
+          "sensory"
+        ],
+        "confidence": "high",
+        "evidenceIds": [
+          "cdc-symptoms-002"
+        ],
+        "whatWeInferred": "Continuous near-point convergence can provoke subtle headache or eye strain without screen exposure.",
+        "whatWeDoNotKnow": "Whether lighting conditions in reading area provide optimal ambient contrast."
+      }
+    ],
     "evidence": [
       {
         "id": "cdc-symptoms-002",
@@ -264,7 +301,7 @@
       {
         "name": "sanitize",
         "status": "ok",
-        "startedAt": 1788524423132,
+        "startedAt": 1788536405064,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "Sanitized 6 event labels; 0 sensitive token(s) removed.",
@@ -274,7 +311,7 @@
       {
         "name": "safety_check",
         "status": "ok",
-        "startedAt": 1788524423132,
+        "startedAt": 1788536405065,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "Passed danger signs check. 0 restricted activity boundaries locked. Distress triage: normal.",
@@ -284,7 +321,7 @@
       {
         "name": "retrieve_evidence",
         "status": "ok",
-        "startedAt": 1788524423132,
+        "startedAt": 1788536405065,
         "durationMs": 1,
         "kind": "retrieval",
         "detail": "Retrieved top 8 verified evidence chunks scored by symptom profile and event demands.",
@@ -294,42 +331,42 @@
       {
         "name": "structure_activities",
         "status": "ok",
-        "startedAt": 1788524423132,
-        "durationMs": 150,
-        "kind": "model",
-        "detail": "Structured loads via deterministic category priors and duration/environment heuristics.",
+        "startedAt": 1788536405065,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Structured all event demand vectors via verified clinical priors (zero model calls required).",
         "itemsIn": 6,
         "itemsOut": 6
       },
       {
         "name": "compose_plan",
-        "status": "ok",
-        "startedAt": 1788524423132,
-        "durationMs": 150,
-        "kind": "model",
-        "detail": "Synthesized 0 recommendations via deterministic rules engine.",
-        "itemsIn": 8,
-        "itemsOut": 0
+        "status": "fallback",
+        "startedAt": 1788536405065,
+        "durationMs": 2,
+        "kind": "deterministic",
+        "detail": "Synthesized 2 recommendations via deterministic rules engine (5 model cascade attempts failed over 10.6s due to free-tier quota/timeout).",
+        "itemsIn": 6,
+        "itemsOut": 2
       },
       {
         "name": "verify_plan",
         "status": "ok",
-        "startedAt": 1788524423132,
-        "durationMs": 1,
+        "startedAt": 1788536415694,
+        "durationMs": 5179,
         "kind": "deterministic",
-        "detail": "Verification pass: 0 approved, 0 unsupported claim(s) purged, 0 banned phrase(s) blocked.",
-        "itemsIn": 0,
-        "itemsOut": 0
+        "detail": "Verification pass: 2 approved, 0 unsupported claim(s) purged, 0 banned phrase(s) blocked.",
+        "itemsIn": 2,
+        "itemsOut": 2
       },
       {
         "name": "build_trace",
         "status": "ok",
-        "startedAt": 1788524423132,
+        "startedAt": 1788536420873,
         "durationMs": 1,
         "kind": "deterministic",
-        "detail": "Assembled 7-stage Glass Box trace with 0 verified recommendations."
+        "detail": "Assembled 7-stage Glass Box trace with 2 verified recommendations."
       }
     ],
-    "modelUsed": "gemini-3.8-flash"
+    "modelUsed": null
   }
 }

@@ -1,9 +1,9 @@
 {
   "fixtureId": "maya-day-5",
-  "computedAt": "2026-09-04T12:20:23.127Z",
-  "modelUsed": "gemini-3.8-flash",
+  "computedAt": "2026-09-04T15:39:50.846Z",
+  "modelUsed": null,
   "response": {
-    "status": "ok",
+    "status": "degraded",
     "safety": {
       "dangerSignsDetected": false,
       "dangerSignsSelected": [],
@@ -385,7 +385,7 @@
       {
         "name": "sanitize",
         "status": "ok",
-        "startedAt": 1788524423129,
+        "startedAt": 1788536390848,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "Sanitized 8 event labels; 0 sensitive token(s) removed.",
@@ -395,7 +395,7 @@
       {
         "name": "safety_check",
         "status": "ok",
-        "startedAt": 1788524423129,
+        "startedAt": 1788536390848,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "Passed danger signs check. 1 restricted activity boundaries locked. Distress triage: normal.",
@@ -405,7 +405,7 @@
       {
         "name": "retrieve_evidence",
         "status": "ok",
-        "startedAt": 1788524423130,
+        "startedAt": 1788536390849,
         "durationMs": 1,
         "kind": "retrieval",
         "detail": "Retrieved top 8 verified evidence chunks scored by symptom profile and event demands.",
@@ -415,28 +415,28 @@
       {
         "name": "structure_activities",
         "status": "ok",
-        "startedAt": 1788524423130,
-        "durationMs": 150,
-        "kind": "model",
-        "detail": "Structured loads via deterministic category priors and duration/environment heuristics.",
+        "startedAt": 1788536390850,
+        "durationMs": 1,
+        "kind": "deterministic",
+        "detail": "Structured all event demand vectors via verified clinical priors (zero model calls required).",
         "itemsIn": 8,
         "itemsOut": 8
       },
       {
         "name": "compose_plan",
-        "status": "ok",
-        "startedAt": 1788524423130,
-        "durationMs": 150,
-        "kind": "model",
-        "detail": "Synthesized 4 recommendations via deterministic rules engine.",
+        "status": "fallback",
+        "startedAt": 1788536390850,
+        "durationMs": 2,
+        "kind": "deterministic",
+        "detail": "Synthesized 4 recommendations via deterministic rules engine (5 model cascade attempts failed over 11.1s due to free-tier quota/timeout).",
         "itemsIn": 8,
         "itemsOut": 4
       },
       {
         "name": "verify_plan",
         "status": "ok",
-        "startedAt": 1788524423131,
-        "durationMs": 1,
+        "startedAt": 1788536401923,
+        "durationMs": 3140,
         "kind": "deterministic",
         "detail": "Verification pass: 4 approved, 0 unsupported claim(s) purged, 0 banned phrase(s) blocked.",
         "itemsIn": 4,
@@ -445,12 +445,12 @@
       {
         "name": "build_trace",
         "status": "ok",
-        "startedAt": 1788524423131,
+        "startedAt": 1788536405063,
         "durationMs": 1,
         "kind": "deterministic",
         "detail": "Assembled 7-stage Glass Box trace with 4 verified recommendations."
       }
     ],
-    "modelUsed": "gemini-3.8-flash"
+    "modelUsed": null
   }
 }

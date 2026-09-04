@@ -40,21 +40,7 @@ export default function PlanPage() {
 
   const handleLoadMayaDemo = () => {
     loadPersona("maya-day-5");
-    const demoTrace: TraceStage[] = [
-      {
-        name: "served_from_precomputed",
-        status: "ok",
-        startedAt: Date.now() - 2,
-        durationMs: 2,
-        kind: "retrieval",
-        detail: "Demo day analysed with gemini-3.8-flash on 4 Sep 2026. Re-run live to call the model now.",
-      },
-      ...(mayaPrecomputed.response.trace as TraceStage[]),
-    ];
-    setAnalysisResult({
-      ...(mayaPrecomputed.response as AnalysisResponse),
-      trace: demoTrace,
-    });
+    setAnalysisResult(mayaPrecomputed.response as AnalysisResponse);
   };
 
   const handleRerunLive = async () => {
@@ -468,15 +454,24 @@ export default function PlanPage() {
             {recommendations.length === 0 && (
               <div
                 style={{
-                  padding: "var(--space-6)",
+                  padding: "var(--space-8)",
                   backgroundColor: "var(--surface)",
-                  border: "1px solid var(--hairline)",
+                  border: "1px solid var(--hairline-strong)",
                   borderRadius: "var(--radius-md)",
                   textAlign: "center",
-                  color: "var(--muted)",
+                  display: "grid",
+                  gap: "var(--space-2)",
+                  maxWidth: "580px",
+                  margin: "0 auto",
                 }}
               >
-                No modifications suggested. Your current schedule matches today&apos;s capacity baseline.
+                <div style={{ fontSize: "2rem" }}>🌱</div>
+                <h3 style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0, color: "var(--ink)" }}>
+                  No pacing changes suggested for this day
+                </h3>
+                <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  Anticipated demand stays below your capacity baseline throughout. Maintain your comfortable pacing and adhere to your treating clinician&apos;s recovery guidance.
+                </p>
               </div>
             )}
           </div>

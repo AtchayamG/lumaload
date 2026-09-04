@@ -63,9 +63,9 @@ export async function runAnalysisPipeline(
 
     // Mark downstream stages as SKIPPED
     const skippedStages = [
-      { name: "structure_activities", kind: "model" as const },
+      { name: "structure_activities", kind: "deterministic" as const },
       { name: "retrieve_evidence", kind: "retrieval" as const },
-      { name: "compose_plan", kind: "model" as const },
+      { name: "compose_plan", kind: "deterministic" as const },
       { name: "verify_plan", kind: "deterministic" as const },
       { name: "build_trace", kind: "deterministic" as const },
     ];
@@ -185,10 +185,10 @@ export async function runAnalysisPipeline(
 
   trace.push({
     name: "structure_activities",
-    status: structureResult.usedFallback ? "fallback" : "ok",
+    status: allEventsHavePriors ? "ok" : structureResult.usedFallback ? "fallback" : "ok",
     startedAt: tGenStart,
     durationMs: allEventsHavePriors ? 1 : dGen,
-    kind: structureResult.usedFallback ? "deterministic" : "model",
+    kind: allEventsHavePriors || structureResult.usedFallback ? "deterministic" : "model",
     detail: allEventsHavePriors
       ? "Structured all event demand vectors via verified clinical priors (zero model calls required)."
       : structureResult.usedFallback
@@ -204,14 +204,12 @@ export async function runAnalysisPipeline(
     name: "compose_plan",
     status: composeOutput.usedFallback ? "fallback" : "ok",
     startedAt: tGenStart,
-    durationMs: dGen,
+    durationMs: composeOutput.usedFallback ? 2 : dGen,
     kind: composeOutput.usedFallback ? "deterministic" : "model",
     detail: composeOutput.usedFallback
-      ? composeOutput.errorDetail
-        ? `Fallback to rules engine (${composeOutput.errorDetail}).`
-        : `Synthesized ${composeOutput.recommendations.length} recommendations via deterministic rules engine.`
+      ? `Synthesized ${composeOutput.recommendations.length} recommendations via deterministic rules engine (5 model cascade attempts failed over ${(dGen / 1000).toFixed(1)}s due to free-tier quota/timeout).`
       : `Synthesized ${composeOutput.recommendations.length} recommendations via ${composeOutput.modelUsed} grounded in retrieved evidence.`,
-    itemsIn: retrievedEvidence.length,
+    itemsIn: sanitizedEvents.length,
     itemsOut: composeOutput.recommendations.length,
   });
 

@@ -171,6 +171,88 @@ export class DeterministicProvider implements AIProvider {
       }
     }
 
+    // 5. Gradual activity continuation & avoid prolonged strict rest (sub-acute / paced day)
+    const lightPhysicalEvent = eligibleEvents.find(
+      (e) =>
+        e.category === "short_walk" ||
+        e.category === "household_chores" ||
+        e.category === "errand_shopping"
+    );
+
+    if (lightPhysicalEvent && recommendations.length < 4) {
+      const evidenceId = findEvidenceId(
+        (e) =>
+          e.id === "cdc-recovery-002" ||
+          e.allowedUses.includes("gradual_activity") ||
+          e.allowedUses.includes("avoid_prolonged_rest")
+      );
+
+      recommendations.push({
+        id: `rec-det-gradual-${lightPhysicalEvent.id}`,
+        action: `Continue light physical activity like your ${lightPhysicalEvent.durationMinutes}-minute ${lightPhysicalEvent.label.toLowerCase()} within symptom-free limits`,
+        rationale: `Evidence confirms easing back into regular light physical activity promotes recovery compared to prolonged strict isolation.`,
+        targetEventIds: [lightPhysicalEvent.id],
+        demandReduced: ["physical", "capacity"],
+        confidence: "high",
+        evidenceIds: [evidenceId],
+        whatWeInferred: `Sub-symptom aerobic movement improves recovery when kept within comfortable limits.`,
+        whatWeDoNotKnow: `Personal exertion threshold where symptoms might re-emerge.`,
+      });
+    }
+
+    // 6. Cognitive accommodation / visual break for reading or sustained focus
+    const readingEvent = eligibleEvents.find(
+      (e) => e.category === "reading"
+    );
+
+    if (readingEvent && recommendations.length < 4) {
+      const evidenceId = findEvidenceId(
+        (e) =>
+          e.id === "cdc-school-003" ||
+          e.id === "cdc-recovery-003" ||
+          e.allowedUses.includes("rest_opportunity") ||
+          e.allowedUses.includes("cognitive_accommodation")
+      );
+
+      recommendations.push({
+        id: `rec-det-read-${readingEvent.id}`,
+        action: `Take a 5-minute visual break during the ${readingEvent.durationMinutes}-minute ${readingEvent.label.toLowerCase()}`,
+        rationale: `Sustained near-vision tasks and text processing can induce subtle visual fatigue even in quiet environments.`,
+        targetEventIds: [readingEvent.id],
+        demandReduced: ["cognitive", "sensory"],
+        confidence: "high",
+        evidenceIds: [evidenceId],
+        whatWeInferred: `Continuous near-point convergence can provoke subtle headache or eye strain without screen exposure.`,
+        whatWeDoNotKnow: `Whether lighting conditions in reading area provide optimal ambient contrast.`,
+      });
+    }
+
+    // 7. Evening quiet wind-down & sleep hygiene if recommendations are below target
+    if (recommendations.length < 2) {
+      const eveningEvent =
+        eligibleEvents.find((e) => e.startMinutes >= 960) ||
+        eligibleEvents[eligibleEvents.length - 1];
+      if (eveningEvent) {
+        const evidenceId = findEvidenceId(
+          (e) =>
+            e.id === "cdc-recovery-003" ||
+            e.allowedUses.includes("sleep_hygiene")
+        );
+
+        recommendations.push({
+          id: `rec-det-sleep-${eveningEvent.id}`,
+          action: `Keep ambient lighting soft and limit stimulating audio during ${eveningEvent.label.toLowerCase()}`,
+          rationale: `Protecting sleep architecture and circadian stability prevents next-day baseline capacity drops during recovery.`,
+          targetEventIds: [eveningEvent.id],
+          demandReduced: ["capacity", "sensory"],
+          confidence: "high",
+          evidenceIds: [evidenceId],
+          whatWeInferred: `Low sensory stimulation during evening hours supports restorative sleep cycles.`,
+          whatWeDoNotKnow: `Usual bedtime consistency and sleep duration.`,
+        });
+      }
+    }
+
     return {
       recommendations: recommendations.slice(0, 5),
       modelUsed: null,

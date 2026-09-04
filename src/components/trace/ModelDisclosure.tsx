@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { Button } from "@/components/ui/Button";
@@ -81,14 +81,16 @@ export const ModelDisclosure: React.FC<ModelDisclosureProps> = ({
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.75rem",
                 fontWeight: 700,
-                color: "var(--axis-cognitive)",
+                color: isFallback ? "var(--axis-sensory)" : "var(--axis-cognitive)",
                 padding: "2px 8px",
                 backgroundColor: "var(--canvas)",
                 border: "1px solid var(--hairline)",
                 borderRadius: "var(--radius-sm)",
               }}
             >
-              Pre-computed with gemini-3.8-flash · 4 Sep 2026
+              {isFallback
+                ? "Pre-computed with deterministic rules engine · 4 Sep 2026"
+                : `Pre-computed with ${modelUsed} · 4 Sep 2026`}
             </span>
           )}
         </div>
@@ -132,11 +134,7 @@ export const ModelDisclosure: React.FC<ModelDisclosureProps> = ({
       >
         {isFallback ? (
           <span>
-            Model quota exhausted on the free tier. This plan was produced by LumaLoad&apos;s deterministic rules engine. The evidence, safety gates and boundaries below are unaffected — they never depend on a model.
-          </span>
-        ) : isPrecomputed ? (
-          <span>
-            Pre-computed analysis from authentic Gemini 3.8 Flash execution on Maya&apos;s Day 5 profile. You can click &quot;Re-run live&quot; above to force a live execution across the cascade.
+            Pre-computed with LumaLoad&apos;s deterministic rules engine · 4 Sep 2026. Free-tier model quota was exhausted during the build window. The pipeline, evidence grounding, verification and safety gates are unchanged — none of them depend on a model. Click Re-run live to attempt a model call now.
           </span>
         ) : (
           <span>
