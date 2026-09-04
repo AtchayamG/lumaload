@@ -21,7 +21,7 @@ import {
 /**
  * Global cache of working model ID across lambda invocations
  */
-export let cachedWorkingModel: string | null = null;
+export let cachedWorkingModel: string | null = "gemini-2.5-flash";
 
 export function setCachedWorkingModel(model: string | null): void {
   cachedWorkingModel = model;
@@ -32,12 +32,12 @@ export function getCachedWorkingModel(): string | null {
 }
 
 export const MODEL_CASCADE = [
-  "gemini-3.8-flash",
   "gemini-2.5-flash",
+  "gemini-3.8-flash",
   "gemini-3.5-flash",
 ];
 
-const TIMEOUT_MS = 14500;
+const TIMEOUT_MS = 8000;
 const VERIFIER_TIMEOUT_MS = 5000;
 
 function extractErrorString(err: unknown): string {
