@@ -10,11 +10,11 @@
   --hairline: #D8D5CC;
   --hairline-strong: #B8B3A4;
 
-  /* Axis Colors */
+  /* Axis Colors — WCAG AA compliant (>= 4.5:1 against light surfaces) */
   --axis-cognitive: #1E6C73;
-  --axis-sensory: #C47B48;
-  --axis-physical: #5D7B55;
-  --axis-capacity: #7C6B8A;
+  --axis-sensory: #9E531D;
+  --axis-physical: #466840;
+  --axis-capacity: #695777;
 
   /* Alert / Safety */
   --danger: #A63F3F;
