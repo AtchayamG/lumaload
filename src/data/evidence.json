@@ -1,0 +1,230 @@
+{
+  "$comment": "LumaLoad curated evidence registry. Every URL verified live 2026-09-04. The model may NEVER emit a URL — only an evidence id from this file. Ids not present here cause the recommendation to be deleted by the verifier.",
+  "lastReviewed": "2026-09-04",
+  "sources": {
+    "cdc-symptoms": {
+      "organization": "CDC",
+      "title": "Symptoms of Mild TBI and Concussion",
+      "url": "https://www.cdc.gov/traumatic-brain-injury/signs-symptoms/index.html"
+    },
+    "cdc-recovery": {
+      "organization": "CDC",
+      "title": "Recovering From a Mild TBI or Concussion",
+      "url": "https://www.cdc.gov/traumatic-brain-injury/response/index.html"
+    },
+    "cdc-school": {
+      "organization": "CDC HEADS UP",
+      "title": "Returning to School After a Concussion",
+      "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-school.html"
+    },
+    "cdc-sports": {
+      "organization": "CDC HEADS UP",
+      "title": "Returning to Sports After a Concussion",
+      "url": "https://www.cdc.gov/heads-up/guidelines/returning-to-sports.html"
+    },
+    "concussion-alliance": {
+      "organization": "Concussion Alliance",
+      "title": "Concussion Recovery Guide",
+      "url": "https://www.concussionalliance.org/recovery-guide"
+    },
+    "amsterdam-2023": {
+      "organization": "British Journal of Sports Medicine",
+      "title": "Consensus statement on concussion in sport: the 6th International Conference on Concussion in Sport, Amsterdam 2022",
+      "url": "https://bjsm.bmj.com/content/57/11/695"
+    }
+  },
+  "chunks": [
+    {
+      "id": "cdc-symptoms-001",
+      "sourceKey": "cdc-symptoms",
+      "title": "Light and noise sensitivity is a recognised concussion symptom",
+      "claim": "Being bothered by light or noise is listed by the CDC as a physical symptom of mild TBI and concussion, alongside dizziness or balance problems and vision problems.",
+      "allowedUses": ["environment_modification", "sensory_pacing"],
+      "tags": ["sensory", "environment"]
+    },
+    {
+      "id": "cdc-symptoms-002",
+      "sourceKey": "cdc-symptoms",
+      "title": "Concentration and processing-speed difficulty is a recognised symptom",
+      "claim": "The CDC lists attention or concentration problems, feeling slowed down, and feeling foggy or groggy as cognitive symptoms of mild TBI and concussion.",
+      "allowedUses": ["cognitive_accommodation", "pacing", "screen_breaks"],
+      "tags": ["cognitive"]
+    },
+    {
+      "id": "cdc-symptoms-003",
+      "sourceKey": "cdc-symptoms",
+      "title": "Anxiety, irritability and sadness are recognised concussion symptoms",
+      "claim": "The CDC lists anxiety or nervousness, irritability or being easily angered, feeling more emotional, and sadness as emotional or mood symptoms of mild TBI and concussion.",
+      "allowedUses": ["emotional_support", "capacity_awareness", "seek_care"],
+      "tags": ["capacity", "mood", "anxiety"]
+    },
+    {
+      "id": "cdc-symptoms-004",
+      "sourceKey": "cdc-symptoms",
+      "title": "Sleep disruption is a recognised concussion symptom",
+      "claim": "The CDC lists sleeping significantly more or less than usual and difficulty falling asleep as sleep symptoms of mild TBI and concussion.",
+      "allowedUses": ["sleep_hygiene", "capacity_awareness"],
+      "tags": ["capacity", "sleep"]
+    },
+    {
+      "id": "cdc-symptoms-005",
+      "sourceKey": "cdc-symptoms",
+      "title": "Fatigue and low energy are recognised concussion symptoms",
+      "claim": "The CDC lists feeling tired and having no energy as physical symptoms of mild TBI and concussion.",
+      "allowedUses": ["pacing", "capacity_awareness", "rest_opportunity"],
+      "tags": ["capacity", "physical", "fatigue"]
+    },
+    {
+      "id": "cdc-symptoms-006",
+      "sourceKey": "cdc-symptoms",
+      "title": "Danger signs requiring emergency care",
+      "claim": "The CDC identifies worsening headache, repeated vomiting, seizure, weakness or numbness or loss of coordination, slurred speech, unusual or increasingly confused behaviour, unequal pupil size, and loss of consciousness as danger signs warranting immediate emergency care.",
+      "allowedUses": ["emergency_escalation"],
+      "tags": ["safety", "emergency"]
+    },
+    {
+      "id": "cdc-recovery-001",
+      "sourceKey": "cdc-recovery",
+      "title": "Rest helps most in the first few days",
+      "claim": "The CDC states that resting is good in the first few days after a mild TBI or concussion, as this is when symptoms are more severe.",
+      "allowedUses": ["rest_opportunity", "pacing"],
+      "tags": ["pacing", "physical", "cognitive"]
+    },
+    {
+      "id": "cdc-recovery-002",
+      "sourceKey": "cdc-recovery",
+      "title": "Ease back into regular activities after one or two days of rest",
+      "claim": "The CDC states that after one or two days of rest it is important to ease back into regular activities, even while some mild symptoms are still present.",
+      "allowedUses": ["gradual_activity", "avoid_prolonged_rest", "pacing"],
+      "tags": ["pacing", "cognitive", "physical"]
+    },
+    {
+      "id": "cdc-recovery-003",
+      "sourceKey": "cdc-recovery",
+      "title": "Sleep hygiene: limit screens and loud sound before bed",
+      "claim": "The CDC suggests limiting screen time and loud music before bed, sleeping in a dark room, and keeping a fixed bedtime and wake-up schedule while recovering.",
+      "allowedUses": ["sleep_hygiene", "screen_breaks", "environment_modification"],
+      "tags": ["capacity", "sleep", "sensory"]
+    },
+    {
+      "id": "cdc-recovery-004",
+      "sourceKey": "cdc-recovery",
+      "title": "Contact a provider if symptoms persist or worsen on resuming activity",
+      "claim": "The CDC advises contacting a healthcare provider if symptoms do not resolve within two to three weeks, or if they worsen after returning to regular activities.",
+      "allowedUses": ["seek_care"],
+      "tags": ["safety", "clinician"]
+    },
+    {
+      "id": "cdc-school-001",
+      "sourceKey": "cdc-school",
+      "title": "Early return to school can shorten recovery and reduce mental health symptoms",
+      "claim": "The CDC states that most children can return to school within one to two days of a concussion even while experiencing symptoms, and that early return can shorten recovery and reduce the likelihood of mental health symptoms.",
+      "allowedUses": ["gradual_activity", "avoid_prolonged_rest", "emotional_support", "social_connection"],
+      "tags": ["cognitive", "capacity", "school"]
+    },
+    {
+      "id": "cdc-school-002",
+      "sourceKey": "cdc-school",
+      "title": "Cognitive accommodations: extra time, reduced workload",
+      "claim": "For cognitive symptoms the CDC suggests providing extra time to work on class assignments and tests, and reducing class assignments and homework to key tasks only.",
+      "allowedUses": ["cognitive_accommodation", "pacing", "workload_reduction"],
+      "tags": ["cognitive", "school", "work"]
+    },
+    {
+      "id": "cdc-school-003",
+      "sourceKey": "cdc-school",
+      "title": "Physical and sensory accommodations: rest breaks and transition time",
+      "claim": "For physical and sensory symptoms the CDC suggests providing rest breaks, allowing extra time to move between classes, and allowing time to visit the school nurse.",
+      "allowedUses": ["rest_opportunity", "environment_modification", "pacing"],
+      "tags": ["sensory", "physical", "school"]
+    },
+    {
+      "id": "cdc-school-004",
+      "sourceKey": "cdc-school",
+      "title": "Emotional support: someone to talk to, and staying connected",
+      "claim": "The CDC suggests developing a plan for who a student can talk to if they feel overwhelmed, and encouraging them to stay connected to friends during recovery.",
+      "allowedUses": ["emotional_support", "social_connection"],
+      "tags": ["capacity", "mood", "anxiety", "school"]
+    },
+    {
+      "id": "cdc-school-005",
+      "sourceKey": "cdc-school",
+      "title": "Remove accommodations gradually as the person improves",
+      "claim": "The CDC advises that temporary modifications should be removed slowly as the student improves, with support tailored to their specific symptoms.",
+      "allowedUses": ["gradual_activity", "pacing"],
+      "tags": ["pacing", "school"]
+    },
+    {
+      "id": "cdc-sports-001",
+      "sourceKey": "cdc-sports",
+      "title": "Return to sport requires healthcare provider approval and supervision",
+      "claim": "The CDC states that after a concussion an athlete should only return to sports practices with the approval and under the supervision of their healthcare provider.",
+      "allowedUses": ["clinician_clearance_required"],
+      "tags": ["safety", "restricted", "clinician"]
+    },
+    {
+      "id": "cdc-sports-002",
+      "sourceKey": "cdc-sports",
+      "title": "Stepwise return to play, minimum 24 hours per step",
+      "claim": "The CDC describes a six-step return-to-play progression with a minimum of 24 hours per step, advancing only if no new symptoms appear; if symptoms return the athlete should stop and their medical provider should be contacted.",
+      "allowedUses": ["clinician_clearance_required", "symptom_limited_activity"],
+      "tags": ["safety", "restricted", "physical"]
+    },
+    {
+      "id": "concussion-alliance-001",
+      "sourceKey": "concussion-alliance",
+      "title": "Do not cocoon in a dark room; relative rest instead",
+      "claim": "Concussion Alliance advises against lying in a darkened room resting for extended periods during the day, even in the first 24 to 48 hours, recommending relative rest that includes activities of daily living.",
+      "allowedUses": ["avoid_prolonged_rest", "gradual_activity"],
+      "tags": ["pacing", "sensory", "capacity"]
+    },
+    {
+      "id": "concussion-alliance-002",
+      "sourceKey": "concussion-alliance",
+      "title": "Light activity within the first 24 hours is associated with better outcomes",
+      "claim": "Concussion Alliance reports that starting light-intensity physical activity such as walking in the first 24 to 48 hours after a concussion reduces the risk of symptoms persisting longer than a month.",
+      "allowedUses": ["light_physical_activity", "gradual_activity"],
+      "tags": ["physical", "pacing"]
+    },
+    {
+      "id": "concussion-alliance-003",
+      "sourceKey": "concussion-alliance",
+      "title": "Limiting screen time in the first two days is associated with faster recovery",
+      "claim": "Concussion Alliance reports research in which limiting screen use to roughly 65 minutes per day for the first two days was associated with substantially faster recovery, with gradual symptom-tolerant resumption after 48 hours.",
+      "allowedUses": ["screen_breaks", "workload_reduction", "pacing"],
+      "tags": ["sensory", "cognitive", "screen"]
+    },
+    {
+      "id": "concussion-alliance-004",
+      "sourceKey": "concussion-alliance",
+      "title": "Isolation can worsen low mood and anxiety",
+      "claim": "Concussion Alliance notes that isolation from digital devices and from other people can worsen depression and anxiety during recovery, and emphasises early mental health referral where recovery may be delayed.",
+      "allowedUses": ["social_connection", "emotional_support", "seek_care"],
+      "tags": ["capacity", "mood", "anxiety"]
+    },
+    {
+      "id": "concussion-alliance-005",
+      "sourceKey": "concussion-alliance",
+      "title": "Symptoms beyond four weeks warrant specialised care",
+      "claim": "Concussion Alliance advises that symptoms persisting beyond four weeks warrant specialised care.",
+      "allowedUses": ["seek_care"],
+      "tags": ["safety", "clinician"]
+    },
+    {
+      "id": "amsterdam-2023-001",
+      "sourceKey": "amsterdam-2023",
+      "title": "Relative rest for 24-48 hours, then symptom-limited return to activity",
+      "claim": "The 6th International Consensus Statement on Concussion in Sport recommends relative rest for the first 24 to 48 hours followed by a gradual, symptom-limited return to activity rather than prolonged complete rest.",
+      "allowedUses": ["avoid_prolonged_rest", "gradual_activity", "symptom_limited_activity", "pacing"],
+      "tags": ["pacing", "physical", "cognitive"]
+    },
+    {
+      "id": "amsterdam-2023-002",
+      "sourceKey": "amsterdam-2023",
+      "title": "Return to learn precedes return to sport, under clinician oversight",
+      "claim": "The 6th International Consensus Statement on Concussion in Sport describes return to learn as preceding full return to sport, with clinician oversight of progression.",
+      "allowedUses": ["clinician_clearance_required", "gradual_activity"],
+      "tags": ["safety", "school", "restricted"]
+    }
+  ]
+}
